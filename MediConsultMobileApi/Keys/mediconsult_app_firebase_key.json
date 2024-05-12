@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "mediconsult-36e50",
+  "private_key_id": "a131c632b741b301cff290132ebd2dcc3806afe1",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvwIBADANBgkqhkiG9w0BAQEFAASCBKkwggSlAgEAAoIBAQDierMPzo88ZqzE\nJVGLhv/977dcYsi1sjorv9fwEs2kfJxv3sf7y6WXdyIFYGLopbnYQLRdGa5AbYL/\noVNjIYTaQ0Xs9EIJhlvtn4IwxCM7TejFDmLAzdH9PrjPP9c5PrUlHGaviNa0nOGe\nPLkFY60KZoYukartDEeZgbQOk/04oGpsagzlId7KvBp6uYrTfNJVUn22WxSeBfes\n8GVxTwaLAkbijm08oCBIisBzC8pMEs60tPi09P/wLmu1TGqAXhtIqokP0kh8QF8g\nhmRnRcW4i3UuY6DWE0bVY7X1w3mT3fVHqaGWgDQcmVw2h6uoErGGSd2kSDZRwQX8\npYS9UHx5AgMBAAECggEAB5psl4EXlZoG08uYRLxirLZBrB7UM9FeGujlCXYVeZ+w\nqsrKYPLRxizQM2kBzmNTQrt4B/txj6UoNYfHd7erhkj64yfCGHVucaLzaSAJ5MGf\n/mRAvs30w5vkSBo8Z1C/yRVT1zHGBNM9ec/6ZYAWp5eQiqYGRyYB41k+NRJqeQj4\nIdMnZmne5rwzG9oyafXEix+k8gA1UQ5QinPBLUFenTTafvPTjyX0YFkJ8FrKv6OW\nkQjXFKmTQ3o0tr8GJbJ5wdZOldezhreFq0yE2aPoKOLu6ziaJ9vYzs0Z17eTfbWA\nDmaQlQnvUuFyjg8VCEvOXlbVy+G1e7biJARB2XOLwQKBgQD5Asvrh+GLWSTK2MiJ\nRKVAoI9vIYw/OvHnhaxmalgtaWa2DvR2vsBtACm+TXnWnt953nqabeEUZaZjXC3j\nrLq/AsfzREF3tkjV3h1A+kP7NbsyQ5bNZ2IJbcUSKbvqd5/54sBjBA1jk05SSl1J\nQS2Te3spDBETiruFFdWEoEkV6QKBgQDo1gH5suVMwqjDV2ZlggWbQoS4tsQDr1Vs\nghDI+q70wbc3Gc2uZLhemXMHh+bg/YEcLVmOrlMXCEaUhcCfD5rQTO++BGQcm33m\nhOykCZwtq1o0C2pxXoTK1hIHFpVo/YaEjJzg/cipYo3fadoC6H6ICz/JW6vk7KOW\nogAg9ZjIEQKBgQDmGMZ0Q2CQEnSkGIPeDBejy3ofF+Hvv7ku1l/DV3tZoy7tBo6x\nd3x6fI8WMaNnRfF9PK8QKn61CWUiJVimLMN3o8s+KJFSXJebQJ7JnzjYVgM/5CLi\ndSirS8qyCOyDMb0a/IQIOwNgQws5kUv4WAkUYiMhf+v7odO7m7xszGwcmQKBgQDK\nrT+a9DbV0rzFDdd8lOn8dLLDd5S5AG8DvVSPHmgddmLd/AAmxlYXQsv2yj4Xq5Qv\nyuoiYWzCp9mIf8VksFi66b3nUjszC8dUWnEDeboRpw8mLqnBdd1yE1YuBWKZudbW\nmvAUidWaXMfSqnmz/l3mXqRvyvSemb7s6KfkCOWtgQKBgQCj8VRgKG1wcocIQ8Y8\nfD3gO6Y4UoD3rNk1AzEZGrgVhKB4d8HW03MTrNlXL+WaUN6bT0s1M7//E+0LRsDY\nOl2ymseJDTlT29IUdB3dW51S6aplkrquDfEKQQhBpxluu24XnuWUwRjPQyoLHlaG\n+vyMUGnt3WlKImNcskUZ0pZr/Q==\n-----END PRIVATE KEY-----\n",
+  "client_email": "firebase-adminsdk-hpos2@mediconsult-36e50.iam.gserviceaccount.com",
+  "client_id": "106681792070166034032",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-hpos2%40mediconsult-36e50.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}
