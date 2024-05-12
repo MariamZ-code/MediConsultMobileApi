@@ -31,7 +31,7 @@ namespace MediConsultMobileApi.Controllers
         #region GetChronic 
 
         [HttpGet]
-        public async Task<IActionResult> GetAllChronic([Required] int memberId, string lang)
+        public async Task<IActionResult> GetAllChronic([Required] int memberId, string lang, int startPage = 1, int pageSize = 10)
         {
             if (ModelState.IsValid)
             {
@@ -109,9 +109,22 @@ namespace MediConsultMobileApi.Controllers
 
                     chronicList.Add(chronicDto);
                 }
-                return Ok(chronicList);
+                var totalChronic = chronicList.Count();
+                chronicList = chronicList.Skip((startPage - 1) * pageSize).Take(pageSize).OrderBy(m => m.provider_name).ToList();
+
+                var chronicResult = new
+                {
+
+                    TotalCount = totalChronic,
+                    PageNumber = startPage,
+                    PageSize = pageSize,
+                    Requests = chronicList,
+
+
+                };
+                return Ok(chronicResult);
             }
-            return BadRequest();
+            return BadRequest(ModelState);
         }
 
         private string ExtractUrl(string input)

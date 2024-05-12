@@ -52,17 +52,17 @@ namespace MediConsultMobileApi.Controllers
                 {
                     var sta = historyDto.ServiceName[i];
                 }
-                member = member.Where(c => historyDto.ServiceName.Contains(c.ServiceName));
+                member = member.Where(c => historyDto.ServiceName.StartsWith(c.ServiceName));
             }
 
 
-            if (historyDto.Diagosis != null && historyDto.Diagosis.Any())
+            if (historyDto.Diagnosis != null && historyDto.Diagnosis.Any())
             {
-                for (int i = 0; i < historyDto.Diagosis.Length; i++)
+                for (int i = 0; i < historyDto.Diagnosis.Length; i++)
                 {
-                    var sta = historyDto.Diagosis[i];
+                    var sta = historyDto.Diagnosis[i];
                 }
-                member = member.Where(c => historyDto.Diagosis.Contains(c.Diagosis));
+                member = member.Where(c => historyDto.Diagnosis.StartsWith(c.Diagnosis));
             }
 
 
@@ -75,14 +75,7 @@ namespace MediConsultMobileApi.Controllers
                 member = member.Where(c => historyDto.Request_Type.Contains(c.Request_Type));
             }
 
-            if (historyDto.Request_Type != null && historyDto.Request_Type.Any())
-            {
-                for (int i = 0; i < historyDto.Request_Type.Length; i++)
-                {
-                    var sta = historyDto.Request_Type[i];
-                }
-                member = member.Where(c => historyDto.Request_Type.Contains(c.Request_Type));
-            }
+        
 
             if (historyDto.Qty != null && historyDto.Qty.ToString().Any())
             {
@@ -90,7 +83,7 @@ namespace MediConsultMobileApi.Controllers
                 {
                     var sta = historyDto.Qty.ToString()[i];
                 }
-                member = member.Where(c => historyDto.Qty.ToString().Contains(c.Qty.ToString()));
+                member = member.Where(c => historyDto.Qty.ToString().StartsWith(c.Qty.ToString()));
             }
             var totalHistories = member.Count();
 
