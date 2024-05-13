@@ -19,13 +19,17 @@ namespace MediConsultMobileApi.Controllers
         private readonly IPharmaApprovalRepository pharmaRepo;
         private readonly IMemberRepository memberRepo;
         private readonly IApprovalLogRepository approvalLogRepo;
+        private readonly IAuthRepository authRepo;
+        private readonly IMemberProgramRepository programRepo;
 
-        public ApprovalChronicController(IApprovalRepository approvalRepo, IPharmaApprovalRepository pharmaRepo , IMemberRepository memberRepo , IApprovalLogRepository approvalLogRepo)
+        public ApprovalChronicController(IApprovalRepository approvalRepo, IPharmaApprovalRepository pharmaRepo, IMemberRepository memberRepo, IApprovalLogRepository approvalLogRepo , IAuthRepository authRepo , IMemberProgramRepository programRepo)
         {
             this.approvalRepo = approvalRepo;
             this.pharmaRepo = pharmaRepo;
             this.memberRepo = memberRepo;
             this.approvalLogRepo = approvalLogRepo;
+            this.authRepo = authRepo;
+            this.programRepo = programRepo;
         }
 
         #region GetChronic 
@@ -148,14 +152,65 @@ namespace MediConsultMobileApi.Controllers
         }
         #endregion
 
+        #region InsertApprovalChronic
+        [HttpPost("InsertChronicApproval")]
+        public async Task<IActionResult> InsertChronic([Required] int memberId, string lang)
+        {
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var member = authRepo.GetById(memberId);
+            var policy = programRepo.GetMemberbyMemberId(memberId);
+            var chronicApp = new Approval
+            {
+                approval_date= DateTime.Now.ToString("dd-MM-yyyy"),
+                approval_status="Received",
+                approval_validation_period="7",
+                Approval_User_Id = -1 ,
+                is_claimed =0,
+                price_list_id=-1,
+                internal_notes= string.Empty,
+                provider_location_id=-1,
+                provider_id=-1,
+                exceed_pool_id=-1,
+                money_for_exceed_note= -1,
+                is_pharma=1,
+                is_chronic=1,
+                claim_form_no="0" ,
+                debit_spent=0,
+                is_repeated=0,
+                inpatient_duration_days=0,
+                doctor_id=-1,
+                is_canceld=0,
+                is_re_auth=0,
+                pool_spent=0,
+                pool_child_id=0,
+                general_specality_id=-1,
+                Approval_Force_Debit=0,
+                member_id=memberId,
+                client_id=member.client_id,
+                Client_Branch_id = member.branch_id,
+                policy_id=policy.Policy_Id,
+                program_id=policy.Program_id,
+                dental_comment=string.Empty,
+            };
+
+            approvalRepo.AddApproval(memberId, chronicApp);
+            
+
+            return Ok(chronicApp);
+        }
+        #endregion
+
         #region Cancel 
 
         [HttpPost("Canceled")]
-        public async Task<IActionResult> DeleteChronicApproval([Required] int approvalId, [Required]string reason, string lang)
+        public async Task<IActionResult> DeleteChronicApproval([Required] int approvalId, [Required] string reason, string lang)
         {
             if (ModelState.IsValid)
             {
-                var approvalExists =  approvalRepo.ApprovalExists(approvalId);
+                var approvalExists = approvalRepo.ApprovalExists(approvalId);
                 if (!approvalExists)
                 {
                     return BadRequest(new MessageDto { Message = Messages.RefundNotFound(lang) });
@@ -178,10 +233,10 @@ namespace MediConsultMobileApi.Controllers
                 approvalRepo.Canceled(approvalId);
                 approvalRepo.Save();
 
-                return Ok(new MessageDto { Message= Messages.CanceledApprovalChronic(lang)});
+                return Ok(new MessageDto { Message = Messages.CanceledApprovalChronic(lang) });
             }
             return BadRequest(ModelState);
         }
-            #endregion
+        #endregion
     }
 }

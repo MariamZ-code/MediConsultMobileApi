@@ -1,18 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-
-namespace MediConsultMobileApi.Models
+﻿namespace MediConsultMobileApi.DTO
 {
-    [Table("Approval_Data")]
-    public class Approval
+    public class AddApprovalDTO
     {
-        [Key]
-        public int approval_id { get; set; }
-
         public string approval_status { get; set; }
         public string approval_date { get; set; }
-        public string approval_validation_period { get; set; }
-        public int? client_id { get; set; }
+        public int client_id { get; set; }
         public int Client_Branch_id { get; set; }
         public int policy_id { get; set; }
         public int program_id { get; set; }
@@ -46,24 +38,11 @@ namespace MediConsultMobileApi.Models
         public string? inpatient_duration_type { get; set; }
         public int? additional_pool_id { get; set; }
         public int? doctor_id { get; set; }
-        public string? dental_comment { get; set; }
 
 
         public string? reject_reason { get; set; }
         public int? is_critical { get; set; }
         public int? is_exception { get; set; }
-
-
-        [ForeignKey(nameof(Provider))]
-        public int provider_id { get; set; }
-
-        public ProviderData Provider { get; set; }
-
-        [ForeignKey(nameof(ClientBranchMember))]
-        public int member_id { get; set; }
-
-        public ClientBranchMember ClientBranchMember { get; set; }
-
 
     }
 }

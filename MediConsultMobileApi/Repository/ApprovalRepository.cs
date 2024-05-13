@@ -1,4 +1,5 @@
-﻿using MediConsultMobileApi.Models;
+﻿using MediConsultMobileApi.DTO;
+using MediConsultMobileApi.Models;
 using MediConsultMobileApi.Repository.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
@@ -45,6 +46,12 @@ namespace MediConsultMobileApi.Repository
 
         }
         #endregion
+
+        public void AddApproval(int memberId , Approval approval)
+        {
+            dbContext.Approvals.Add(approval);
+            dbContext.SaveChanges();
+        }
 
         #region SaveChanges
         public void Save()
