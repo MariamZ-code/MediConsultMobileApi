@@ -114,7 +114,7 @@ namespace MediConsultMobileApi.Controllers
                     chronicList.Add(chronicDto);
                 }
                 var totalChronic = chronicList.Count();
-                chronicList = chronicList.Skip((startPage - 1) * pageSize).Take(pageSize).OrderBy(m => m.provider_name).ToList();
+                chronicList = chronicList.Skip((startPage - 1) * pageSize).Take(pageSize).OrderBy(m => m.approval_id).ToList();
 
                 var chronicResult = new
                 {
