@@ -35,47 +35,56 @@ namespace MediConsultMobileApi.Controllers
             }
             var member = memberHistoryRepo.GetMemberHistory(memberId);
 
-            if (historyDto.Status != null && historyDto.Status.Any())
+            if (historyDto.Status is not  null && historyDto.Status.Any())
             {
                 for (int i = 0; i < historyDto.Status.Length; i++)
                 {
                     var sta = historyDto.Status[i];
                 }
                 
-                member = member.Where(c => historyDto.Status.Contains(c.ServiceStatus));
+                member = member.Where(c => c.ServiceStatus.Contains(historyDto.Status));
             }
+         
 
-
-            if (historyDto.ServiceName != null && historyDto.ServiceName.Any())
+            if (historyDto.ServiceName is not null && historyDto.ServiceName.Any())
             {
                 for (int i = 0; i < historyDto.ServiceName.Length; i++)
                 {
                     var sta = historyDto.ServiceName[i];
                 }
-                member = member.Where(c => historyDto.ServiceName.StartsWith(c.ServiceName));
+                member = member.Where(c => c.ServiceName.StartsWith(historyDto.ServiceName));
             }
 
 
-            if (historyDto.Diagnosis != null && historyDto.Diagnosis.Any())
+            if (historyDto.Diagnosis is not null && historyDto.Diagnosis.Any())
             {
                 for (int i = 0; i < historyDto.Diagnosis.Length; i++)
                 {
                     var sta = historyDto.Diagnosis[i];
                 }
-                member = member.Where(c => historyDto.Diagnosis.StartsWith(c.Diagnosis));
+                member = member.Where(c => c.Diagnosis.StartsWith(historyDto.Diagnosis));
             }
 
 
-            if (historyDto.Request_Type != null && historyDto.Request_Type.Any())
+            if (historyDto.Request_Type is not null && historyDto.Request_Type.Any())
             {
                 for (int i = 0; i < historyDto.Request_Type.Length; i++)
                 {
                     var sta = historyDto.Request_Type[i];
                 }
-                member = member.Where(c => historyDto.Request_Type.Contains(c.Request_Type));
+                member = member.Where(c => c.Request_Type.Contains(historyDto.Request_Type));
             }
 
-        
+            if (historyDto.Date is not null && historyDto.Date.Any())
+            {
+                for (int i = 0; i < historyDto.Date.Length; i++)
+                {
+                    var sta = historyDto.Date[i];
+                }
+                member = member.Where(c => c.ServiceDate.Contains(historyDto.Date));
+            }
+
+
 
             if (historyDto.Qty != null && historyDto.Qty.ToString().Any())
             {
@@ -83,8 +92,10 @@ namespace MediConsultMobileApi.Controllers
                 {
                     var sta = historyDto.Qty.ToString()[i];
                 }
-                member = member.Where(c => historyDto.Qty.ToString().StartsWith(c.Qty.ToString()));
+                member = member.Where(c => c.Qty.ToString().StartsWith(historyDto.Qty.ToString()));
             }
+           
+            
             var totalHistories = member.Count();
 
             member = member.Skip((startPage - 1) * pageSize).Take(pageSize).OrderBy(m => m.ServiceName);
