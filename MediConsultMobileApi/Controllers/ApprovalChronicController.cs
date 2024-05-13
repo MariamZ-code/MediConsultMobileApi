@@ -41,6 +41,10 @@ namespace MediConsultMobileApi.Controllers
                     return BadRequest(new MessageDto { Message = Messages.MemberNotFound(lang) });
                 }
                 var chonics = await approvalRepo.GetAll(memberId);
+                if (chonics is null)
+                {
+                    return NotFound("sothing Wrong");
+                }
                 var chronicList = new List<ApprovalChronicDTO>();
                 var medicionList = new List<Medicines>();
 
