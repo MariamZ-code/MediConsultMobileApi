@@ -372,7 +372,15 @@ namespace MediConsultMobileApi.Controllers
 
 
                 }
-                if (endDate is not null || startDate is not null)
+                if (endDate is not null && startDate is null )
+                {
+                    return NotFound(new MessageDto { Message = "Enter start Date"});
+                }
+                if (endDate is null && startDate is not null)
+                {
+                    return NotFound(new MessageDto { Message = "Enter end Date" });
+                }
+                if (endDate is not null && startDate is not null)
                 {
 
                     DateTime startDat = DateTime.ParseExact(startDate, "dd-MM-yyyy", CultureInfo.InvariantCulture);
