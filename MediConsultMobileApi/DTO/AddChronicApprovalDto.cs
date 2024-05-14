@@ -6,5 +6,7 @@
         public int act_id { get; set; }
         public string? dose { get; set; }
         public string? unit_name { get; set; }
+
+        public List<IFormFile> files { get; set; }
     }
 }
