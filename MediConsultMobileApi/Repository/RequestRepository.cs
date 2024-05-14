@@ -101,6 +101,7 @@ namespace MediConsultMobileApi.Repository
 
         }
         #endregion
+
         #region RequestByMemberId
         public IQueryable<Request> GetRequestsByMemberId(int memberId)
         {

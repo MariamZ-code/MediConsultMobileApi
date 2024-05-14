@@ -25,8 +25,9 @@ namespace MediConsultMobileApi.Controllers
         private readonly IMemberProgramRepository programRepo;
         private readonly IApprovalTimelineRepository appTimelineRepo;
         private readonly IYodawyMedicinsRepository medRepo;
+        private readonly IRequestRepository requestRepo;
 
-        public ApprovalChronicController(IApprovalRepository approvalRepo, IPharmaApprovalRepository pharmaRepo, IMemberRepository memberRepo, IApprovalLogRepository approvalLogRepo, IAuthRepository authRepo, IMemberProgramRepository programRepo, IApprovalTimelineRepository appTimelineRepo , IYodawyMedicinsRepository medRepo)
+        public ApprovalChronicController(IApprovalRepository approvalRepo, IPharmaApprovalRepository pharmaRepo, IMemberRepository memberRepo, IApprovalLogRepository approvalLogRepo, IAuthRepository authRepo, IMemberProgramRepository programRepo, IApprovalTimelineRepository appTimelineRepo, IYodawyMedicinsRepository medRepo , IRequestRepository requestRepo)
         {
             this.approvalRepo = approvalRepo;
             this.pharmaRepo = pharmaRepo;
@@ -36,6 +37,7 @@ namespace MediConsultMobileApi.Controllers
             this.programRepo = programRepo;
             this.appTimelineRepo = appTimelineRepo;
             this.medRepo = medRepo;
+            this.requestRepo = requestRepo;
         }
 
         #region GetChronic 
@@ -186,6 +188,8 @@ namespace MediConsultMobileApi.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
+            #region ApprovalData
+
             var member = authRepo.GetById(memberId);
             var policy = programRepo.GetMemberbyMemberId(memberId);
             var chronicApp = new Approval
@@ -223,8 +227,11 @@ namespace MediConsultMobileApi.Controllers
             };
 
             approvalRepo.AddApproval(memberId, chronicApp);
+            #endregion
 
-           var med=await medRepo.GetAllById(approvalDto.act_id);
+            #region PharmaApprovalAct
+
+            var med = await medRepo.GetAllById(approvalDto.act_id);
             var pharmaAct = new PharmaApprovalAct
             {
                 Act_Approval_id = chronicApp.approval_id,
@@ -240,7 +247,7 @@ namespace MediConsultMobileApi.Controllers
                 Act_Total_Amount = 0,
                 Act_Status = "Approved",
                 Act_Status_Reason = null,
-                
+
 
             };
 
@@ -250,6 +257,9 @@ namespace MediConsultMobileApi.Controllers
             }
 
             pharmaRepo.InsertPharmaApproval(pharmaAct);
+            #endregion
+
+            #region ApprovalTimeLine
 
             var appTimeline = new ApprovalTimeline
             {
@@ -262,92 +272,98 @@ namespace MediConsultMobileApi.Controllers
 
             appTimelineRepo.InsertApprovalTimeLine(appTimeline);
 
-            var serverPath = AppDomain.CurrentDomain.BaseDirectory;
-            const long maxSizeBytes = 5 * 1024 * 1024;
+            #endregion
 
 
-            if (approvalDto.files.Count == 0)
-            {
-                return BadRequest(new MessageDto { Message = Messages.NoFileUploaded(lang) });
+            #region ApprovalRequestTable
 
-            }
-            for (int j = 0; j < approvalDto.files.Count; j++)
-            {
-
-                if (approvalDto.files[j].Length == 0)
-                {
-                    return BadRequest(new MessageDto { Message = Messages.NoFileUploaded(lang) });
-                }
-                if (approvalDto.files[j].Length >= maxSizeBytes)
-                {
-                    return BadRequest(new MessageDto { Message = Messages.SizeOfFile(lang) });
-                }
-                // image.png --0
-                switch (Path.GetExtension(approvalDto.files[j].FileName))
-                {
-                    case ".pdf":
-                    case ".png":
-                    case ".jpg":
-                    case ".jpeg":
-                        break;
-                    default:
-                        return BadRequest(new MessageDto { Message = Messages.FileExtension(lang) });
-                }
-            }
-            var request = requestRepo.AddRequest(requestDto);
-            var folder = $"{serverPath}\\MemberPortalApp\\{requestDto.Member_id}\\Approvals\\{request.ID}";
-
-          
-
-            for (int i = 0; i < approvalDto.files.Count; i++)
-            {
-                if (!Directory.Exists(folder))
-                {
-                    //Directory.Delete(folder, true); 
-                    Directory.CreateDirectory(folder);
-                }
-
-                string uniqueFileName = Guid.NewGuid().ToString() + "_" + approvalDto.files[i].FileName;
-
-                string filePath = Path.Combine(folder, uniqueFileName);
+            //var serverPath = AppDomain.CurrentDomain.BaseDirectory;
+            //const long maxSizeBytes = 5 * 1024 * 1024;
 
 
-                if (Path.GetExtension(uniqueFileName) != ".pdf")
-                {
+            //if (approvalDto.files.Count == 0)
+            //{
+            //    return BadRequest(new MessageDto { Message = Messages.NoFileUploaded(lang) });
 
-                    using (var stream = new MemoryStream())
-                    {
-                        // Read the uploaded image into a MemoryStream
-                        approvalDto.files[i].CopyTo(stream);
-                        stream.Seek(0, SeekOrigin.Begin);
+            //}
+            //for (int j = 0; j < approvalDto.files.Count; j++)
+            //{
 
-                        // Load the image using ImageSharp
-                        using (var image = SixLabors.ImageSharp.Image.Load(stream))
-                        {
-                            // Compress the image
-                            image.Mutate(x => x.Resize(image.Width / 2, image.Height / 2));
-
-                            using (var outputStream = new FileStream(filePath, FileMode.Create))
-                            {
-                                image.Save(outputStream, new JpegEncoder());
-                            }
-                        }
-                    }
-
-                }
-                else
-                {
-                    using (FileStream stream = new FileStream(filePath, FileMode.Create))
-                    {
-                        await approvalDto.files[i].CopyToAsync(stream);
-                    }
-                }
-
-            }
+            //    if (approvalDto.files[j].Length == 0)
+            //    {
+            //        return BadRequest(new MessageDto { Message = Messages.NoFileUploaded(lang) });
+            //    }
+            //    if (approvalDto.files[j].Length >= maxSizeBytes)
+            //    {
+            //        return BadRequest(new MessageDto { Message = Messages.SizeOfFile(lang) });
+            //    }
+            //    // image.png --0
+            //    switch (Path.GetExtension(approvalDto.files[j].FileName))
+            //    {
+            //        case ".pdf":
+            //        case ".png":
+            //        case ".jpg":
+            //        case ".jpeg":
+            //            break;
+            //        default:
+            //            return BadRequest(new MessageDto { Message = Messages.FileExtension(lang) });
+            //    }
+            //}
+            ////var request = requestRepo.AddRequest(requestDto);
+            //var folder = $"{serverPath}\\MemberPortalApp\\{memberId}\\ChronicApprovals\\{request.ID}";
 
 
 
-            return Ok(request);
+            //for (int i = 0; i < approvalDto.files.Count; i++)
+            //{
+            //    if (!Directory.Exists(folder))
+            //    {
+            //        //Directory.Delete(folder, true); 
+            //        Directory.CreateDirectory(folder);
+            //    }
+
+            //    string uniqueFileName = Guid.NewGuid().ToString() + "_" + approvalDto.files[i].FileName;
+
+            //    string filePath = Path.Combine(folder, uniqueFileName);
+
+
+            //    if (Path.GetExtension(uniqueFileName) != ".pdf")
+            //    {
+
+            //        using (var stream = new MemoryStream())
+            //        {
+            //            // Read the uploaded image into a MemoryStream
+            //            approvalDto.files[i].CopyTo(stream);
+            //            stream.Seek(0, SeekOrigin.Begin);
+
+            //            // Load the image using ImageSharp
+            //            using (var image = SixLabors.ImageSharp.Image.Load(stream))
+            //            {
+            //                // Compress the image
+            //                image.Mutate(x => x.Resize(image.Width / 2, image.Height / 2));
+
+            //                using (var outputStream = new FileStream(filePath, FileMode.Create))
+            //                {
+            //                    image.Save(outputStream, new JpegEncoder());
+            //                }
+            //            }
+            //        }
+
+            //    }
+            //    else
+            //    {
+            //        using (FileStream stream = new FileStream(filePath, FileMode.Create))
+            //        {
+            //            await approvalDto.files[i].CopyToAsync(stream);
+            //        }
+            //    }
+
+            //}
+            //return Ok(request);
+            #endregion
+
+
+
 
             approvalRepo.Save();
 
