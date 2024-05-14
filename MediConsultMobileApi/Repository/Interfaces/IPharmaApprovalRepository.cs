@@ -5,5 +5,6 @@ namespace MediConsultMobileApi.Repository.Interfaces
     public interface IPharmaApprovalRepository
     {
         List<PharmaApprovalAct> GetAllByApprovalId(int approvalId);
+        void InsertPharmaApproval(PharmaApprovalAct pharmaAct);
     }
 }

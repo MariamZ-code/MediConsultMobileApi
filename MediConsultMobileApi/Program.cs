@@ -49,6 +49,7 @@ builder.Services.AddScoped<IBookingRepository, BookingRepository>();
 builder.Services.AddScoped<IMemberHistoryRepsitory, MemberHistoryRepsitory>();
 builder.Services.AddScoped<IYodawyMedicinsRepository, YodawyMedicinsRepository>();
 builder.Services.AddScoped<IMemberProgramRepository, MemberProgramRepository>();
+builder.Services.AddScoped<IApprovalTimelineRepository, ApprovalTimelineRepository>();
 
 builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("cs2")));
 

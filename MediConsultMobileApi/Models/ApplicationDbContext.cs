@@ -58,6 +58,7 @@ namespace MediConsultMobileApi.Models
        
         public DbSet<MemberHistory> MemberHistories { get; set; }
         public DbSet<MemberProgram> memberPrograms { get; set; }
-
+        public DbSet<ApprovalTimeline> ApprovalTimelines { get; set; }
+        
     }
 }

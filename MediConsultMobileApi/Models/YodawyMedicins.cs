@@ -11,6 +11,8 @@ namespace MediConsultMobileApi.Models
         public string name_en { get; set; }
         public string unit2_name { get; set; }
         public string full_form { get; set; }
-       
+        public double sell_price { get; set; }
+
+
     }
 }

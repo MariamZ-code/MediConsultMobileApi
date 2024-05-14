@@ -9,7 +9,7 @@ namespace MediConsultMobileApi.DTO
         public string approval_date { get; set; }
         public  string provider_name { get; set; }
         public string? folderPdf { get; set; }
-        public List<Medicines> Medicines { get; set; }
+        public List<Medicines>? Medicines { get; set; }
     }
 
     public class Medicines

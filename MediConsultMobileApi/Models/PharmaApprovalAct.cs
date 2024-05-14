@@ -9,6 +9,13 @@ namespace MediConsultMobileApi.Models
         [Key]
         public int id { get; set; }
         public double Act_Qty { get; set; }
+        public decimal Act_Price { get; set; }
+        public decimal Act_Discount { get; set; }
+        public decimal Act_Discount_Value { get; set; }
+        public decimal Act_Copayment_Percentage { get; set; }
+        public decimal Act_Copayment_Value { get; set; }
+        public decimal Act_Total_Amount { get; set; }
+        public decimal Act_Grand_Total { get; set; }
         public string? dose { get; set; }
         public string? unit_name { get; set; }
         public string Act_Status { get; set; }

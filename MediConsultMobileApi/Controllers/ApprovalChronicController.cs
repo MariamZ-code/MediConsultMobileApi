@@ -21,8 +21,9 @@ namespace MediConsultMobileApi.Controllers
         private readonly IApprovalLogRepository approvalLogRepo;
         private readonly IAuthRepository authRepo;
         private readonly IMemberProgramRepository programRepo;
+        private readonly IApprovalTimelineRepository appTimelineRepo;
 
-        public ApprovalChronicController(IApprovalRepository approvalRepo, IPharmaApprovalRepository pharmaRepo, IMemberRepository memberRepo, IApprovalLogRepository approvalLogRepo , IAuthRepository authRepo , IMemberProgramRepository programRepo)
+        public ApprovalChronicController(IApprovalRepository approvalRepo, IPharmaApprovalRepository pharmaRepo, IMemberRepository memberRepo, IApprovalLogRepository approvalLogRepo, IAuthRepository authRepo, IMemberProgramRepository programRepo, IApprovalTimelineRepository appTimelineRepo)
         {
             this.approvalRepo = approvalRepo;
             this.pharmaRepo = pharmaRepo;
@@ -30,12 +31,13 @@ namespace MediConsultMobileApi.Controllers
             this.approvalLogRepo = approvalLogRepo;
             this.authRepo = authRepo;
             this.programRepo = programRepo;
+            this.appTimelineRepo = appTimelineRepo;
         }
 
         #region GetChronic 
 
         [HttpGet]
-        public async Task<IActionResult> GetAllChronic([Required] int memberId, string lang, int startPage = 1, int pageSize = 10)
+        public async Task<IActionResult> GetAllChronic([Required] int memberId, string lang, string? date, string? providerName, int startPage = 1, int pageSize = 10)
         {
             if (ModelState.IsValid)
             {
@@ -44,15 +46,32 @@ namespace MediConsultMobileApi.Controllers
                 {
                     return BadRequest(new MessageDto { Message = Messages.MemberNotFound(lang) });
                 }
-                var chonics = await approvalRepo.GetAll(memberId);
-                if (chonics is null)
+                var chronics = await approvalRepo.GetAll(memberId);
+                if (chronics is null)
                 {
                     return NotFound("sothing Wrong");
                 }
-                var chronicList = new List<ApprovalChronicDTO>();
-                var medicionList = new List<Medicines>();
 
-                foreach (var chronic in chonics)
+                var chronicList = new List<ApprovalChronicDTO>();
+
+
+                if (date is not null && date.Any())
+                {
+                    for (int i = 0; i < date.Length; i++)
+                    {
+                        var sta = date[i];
+                    }
+                    chronics = chronics.Where(c => c.approval_date.Contains(date)).ToList();
+                }
+                if (providerName is not null && providerName.Any())
+                {
+                    for (int i = 0; i < providerName.Length; i++)
+                    {
+                        var sta = providerName[i];
+                    }
+                    chronics = chronics.Where(c => c.Provider.provider_name_en.Contains(providerName)).ToList();
+                }
+                foreach (var chronic in chronics)
                 {
                     string url = $"https://hcms.mediconsulteg.com/generate_approval_page.aspx?approval_id={chronic.approval_id}";
 
@@ -70,7 +89,10 @@ namespace MediConsultMobileApi.Controllers
                         file = ExtractUrl(file);
 
                     }
+
                     var medicinesList = pharmaRepo.GetAllByApprovalId(chronic.approval_id);
+
+                    var medicionList = new List<Medicines>();
                     foreach (var medicine in medicinesList)
                     {
                         var med = new Medicines();
@@ -114,8 +136,8 @@ namespace MediConsultMobileApi.Controllers
                     {
                         chronicDto.provider_name = chronic.Provider.provider_name_ar;
                     }
-
                     chronicList.Add(chronicDto);
+                    medicinesList.Clear();
                 }
                 var totalChronic = chronicList.Count();
                 chronicList = chronicList.Skip((startPage - 1) * pageSize).Take(pageSize).OrderBy(m => m.approval_id).ToList();
@@ -154,7 +176,7 @@ namespace MediConsultMobileApi.Controllers
 
         #region InsertApprovalChronic
         [HttpPost("InsertChronicApproval")]
-        public async Task<IActionResult> InsertChronic([Required] int memberId, string lang)
+        public async Task<IActionResult> InsertChronic([Required] int memberId, string lang, AddChronicApprovalDto approvalDto)
         {
 
             if (!ModelState.IsValid)
@@ -164,40 +186,74 @@ namespace MediConsultMobileApi.Controllers
             var policy = programRepo.GetMemberbyMemberId(memberId);
             var chronicApp = new Approval
             {
-                approval_date= DateTime.Now.ToString("dd-MM-yyyy"),
-                approval_status="Received",
-                approval_validation_period="7",
-                Approval_User_Id = -1 ,
-                is_claimed =0,
-                price_list_id=-1,
-                internal_notes= string.Empty,
-                provider_location_id=-1,
-                provider_id=-1,
-                exceed_pool_id=-1,
-                money_for_exceed_note= -1,
-                is_pharma=1,
-                is_chronic=1,
-                claim_form_no="0" ,
-                debit_spent=0,
-                is_repeated=0,
-                inpatient_duration_days=0,
-                doctor_id=-1,
-                is_canceld=0,
-                is_re_auth=0,
-                pool_spent=0,
-                pool_child_id=0,
-                general_specality_id=-1,
-                Approval_Force_Debit=0,
-                member_id=memberId,
-                client_id=member.client_id,
+                approval_date = DateTime.Now.ToString("dd-MM-yyyy"),
+                approval_status = "Received",
+                approval_validation_period = "7",
+                Approval_User_Id = -1,
+                is_claimed = 0,
+                price_list_id = -1,
+                internal_notes = string.Empty,
+                provider_location_id = -1,
+                provider_id = -1,
+                exceed_pool_id = -1,
+                money_for_exceed_note = -1,
+                is_pharma = 1,
+                is_chronic = 1,
+                claim_form_no = "0",
+                debit_spent = 0,
+                is_repeated = 0,
+                inpatient_duration_days = 0,
+                doctor_id = -1,
+                is_canceld = 0,
+                is_re_auth = 0,
+                pool_spent = 0,
+                pool_child_id = 0,
+                general_specality_id = -1,
+                Approval_Force_Debit = 0,
+                member_id = memberId,
+                client_id = member.client_id,
                 Client_Branch_id = member.branch_id,
-                policy_id=policy.Policy_Id,
-                program_id=policy.Program_id,
-                dental_comment=string.Empty,
+                policy_id = policy.Policy_Id,
+                program_id = policy.Program_id,
+                dental_comment = string.Empty,
             };
 
             approvalRepo.AddApproval(memberId, chronicApp);
-            
+
+            var pharmaAct = new PharmaApprovalAct
+            {
+                Act_Approval_id = chronicApp.approval_id,
+                Act_Qty = approvalDto.qty,
+                dose = approvalDto.dose,
+                unit_name = approvalDto.unit_name,
+                Act_id = approvalDto.act_id,
+                Act_Discount = 0,
+                Act_Discount_Value = 0,
+                Act_Copayment_Percentage = 0,
+                Act_Copayment_Value = 0,
+                Act_Grand_Total = 0,
+                Act_Total_Amount = 0,
+                Act_Status = "Approved",
+                Act_Status_Reason = null,
+
+            };
+
+            pharmaRepo.InsertPharmaApproval(pharmaAct);
+
+            var appTimeline = new ApprovalTimeline
+            {
+                action = "requested by member",
+                portal_source = " mobile app",
+                provider_request_id = -1,
+                user_id = -1,
+                status = "Received"
+            };
+
+            appTimelineRepo.InsertApprovalTimeLine(appTimeline);
+
+
+
+
 
             return Ok(chronicApp);
         }
