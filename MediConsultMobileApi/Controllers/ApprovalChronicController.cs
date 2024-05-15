@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using SixLabors.ImageSharp.Formats.Jpeg;
 using SixLabors.ImageSharp.Processing;
 using System.ComponentModel.DataAnnotations;
+using System.Globalization;
 using System.Net;
 using System.Text.RegularExpressions;
 
@@ -43,7 +44,7 @@ namespace MediConsultMobileApi.Controllers
         #region GetChronic 
 
         [HttpGet]
-        public async Task<IActionResult> GetAllChronic([Required] int memberId, string lang, string? date, string? providerName, int startPage = 1, int pageSize = 10)
+        public async Task<IActionResult> GetAllChronic([Required] int memberId, string lang, string? startDate, string? endDate, string? providerName, int startPage = 1, int pageSize = 10)
         {
             if (ModelState.IsValid)
             {
@@ -60,15 +61,37 @@ namespace MediConsultMobileApi.Controllers
 
                 var chronicList = new List<ApprovalChronicDTO>();
 
-
-                if (date is not null && date.Any())
+                if (endDate is not null && startDate is null)
                 {
-                    for (int i = 0; i < date.Length; i++)
-                    {
-                        var sta = date[i];
-                    }
-                    chronics = chronics.Where(c => c.approval_date.Contains(date)).ToList();
+                    return NotFound(new MessageDto { Message = "Enter start Date" });
                 }
+
+                if (endDate is null && startDate is not null)
+                {
+                    return NotFound(new MessageDto { Message = "Enter end Date" });
+                }
+
+                if (endDate is not null && startDate is not null)
+                {
+
+                    DateTime startDat = DateTime.ParseExact(startDate, "dd-MM-yyyy", CultureInfo.InvariantCulture);
+                    DateTime endDat = DateTime.ParseExact(endDate, "dd-MM-yyyy", CultureInfo.InvariantCulture);
+
+                    chronics = chronics
+                         .AsEnumerable().Where(entity =>
+                               DateTime.TryParseExact(entity.approval_date, "dd-MM-yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out var entityDate) &&
+                               entityDate >= startDat &&
+                               entityDate <= endDat)
+                        .ToList();
+                }
+                //if (date is not null && date.Any())
+                //{
+                //    for (int i = 0; i < date.Length; i++)
+                //    {
+                //        var sta = date[i];
+                //    }
+                //    chronics = chronics.Where(c => c.approval_date.Contains(date)).ToList();
+                //}
                 if (providerName is not null && providerName.Any())
                 {
                     for (int i = 0; i < providerName.Length; i++)
@@ -182,12 +205,20 @@ namespace MediConsultMobileApi.Controllers
 
         #region InsertApprovalChronic
         [HttpPost("InsertChronicApproval")]
-        public async Task<IActionResult> InsertChronic(int memberId,[FromForm] AddChronicApprovalDto approvalDto, string lang)
+        public async Task<IActionResult> InsertChronic([Required]int memberId,[FromForm] AddChronicApprovalDto approvalDto, string lang)
         {
 
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
+
+            var memberExists = memberRepo.MemberExists(memberId);
+
+            if (!memberExists)
+            {
+                return BadRequest(new MessageDto { Message = Messages.MemberNotFound(lang) });
+
+            }
             #region ApprovalData
 
             var member = authRepo.GetById(memberId);
@@ -279,25 +310,17 @@ namespace MediConsultMobileApi.Controllers
 
             #endregion
 
-
             #region ApprovalRequestTable
 
             const long maxSizeBytes = 5 * 1024 * 1024;
           
-            var memberExists = memberRepo.MemberExists(memberId);
+   
             if (approvalDto.notes is null)
             {
                 return BadRequest(new MessageDto { Message = Messages.EnterNotes(lang) });
             }
-            if (!memberExists)
-            {
-                return BadRequest(new MessageDto { Message = Messages.MemberNotFound(lang) });
-
-            }
            
-
             var serverPath = AppDomain.CurrentDomain.BaseDirectory;
-
 
             if (approvalDto.files.Count == 0)
             {
@@ -315,7 +338,7 @@ namespace MediConsultMobileApi.Controllers
                 {
                     return BadRequest(new MessageDto { Message = Messages.SizeOfFile(lang) });
                 }
-                // image.png --0
+             
                 switch (Path.GetExtension(approvalDto.files[j].FileName))
                 {
                     case ".pdf":
@@ -337,13 +360,11 @@ namespace MediConsultMobileApi.Controllers
             var request = requestRepo.AddRequest(req);
             var folder = $"{serverPath}\\MemberPortalApp\\{memberId}\\ChronicApprovals\\{request.ID}";
 
-            //var folder = Path.Combine(serverPath, "MemberPortalApp", requestDto.Member_id.ToString(), "Approvals", request.ID.ToString());
 
             for (int i = 0; i < approvalDto.files.Count; i++)
             {
                 if (!Directory.Exists(folder))
                 {
-                    //Directory.Delete(folder, true); 
                     Directory.CreateDirectory(folder);
                 }
 
@@ -387,13 +408,7 @@ namespace MediConsultMobileApi.Controllers
 
             #endregion
 
-
-
-
             approvalRepo.Save();
-
-
-
 
             return Ok(chronicApp);
         }
