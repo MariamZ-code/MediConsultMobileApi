@@ -79,7 +79,15 @@ namespace MediConsultMobileApi.Controllers
                     return BadRequest(new MessageDto { Message = Messages.ProviderDeactivated(lang) });
 
                 }
+                if (requestDto.Is_chronic is null)
+                {
+                    return BadRequest(new MessageDto { Message = Messages.EnterIsChronic(lang) });
+                }
+                if (requestDto.Is_chronic != 0 || requestDto.Is_chronic != 1)
+                {
+                    return BadRequest(new MessageDto { Message = Messages.EnterIsChronic(lang) });
 
+                }
                 var serverPath = AppDomain.CurrentDomain.BaseDirectory;
 
 
@@ -221,9 +229,14 @@ namespace MediConsultMobileApi.Controllers
                     return BadRequest(new MessageDto { Message = Messages.MemberNotFound(lang) });
 
                 }
-                if (requestDto.Is_chronic is null)
+                if (requestDto.Is_chronic is null  )
                 {
                     return BadRequest(new MessageDto { Message = Messages.EnterIsChronic(lang) });
+                }
+                if (requestDto.Is_chronic != 0 || requestDto.Is_chronic != 1)
+                {
+                    return BadRequest(new MessageDto { Message = Messages.EnterIsChronic(lang) });
+
                 }
                 var serverPath = AppDomain.CurrentDomain.BaseDirectory;
 

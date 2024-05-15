@@ -17,7 +17,7 @@ namespace MediConsultMobileApi.Models
         public int policy_id { get; set; }
         public int program_id { get; set; }
 
-        public int service_class_id { get; set; }
+  
         public int provider_location_id { get; set; }
 
         public int Approval_User_Id { get; set; }
