@@ -83,11 +83,7 @@ namespace MediConsultMobileApi.Controllers
                 {
                     return BadRequest(new MessageDto { Message = Messages.EnterIsChronic(lang) });
                 }
-                if (requestDto.Is_chronic != 0 || requestDto.Is_chronic != 1)
-                {
-                    return BadRequest(new MessageDto { Message = Messages.EnterIsChronic(lang) });
-
-                }
+             
                 var serverPath = AppDomain.CurrentDomain.BaseDirectory;
 
 
@@ -233,11 +229,7 @@ namespace MediConsultMobileApi.Controllers
                 {
                     return BadRequest(new MessageDto { Message = Messages.EnterIsChronic(lang) });
                 }
-                if (requestDto.Is_chronic != 0 || requestDto.Is_chronic != 1)
-                {
-                    return BadRequest(new MessageDto { Message = Messages.EnterIsChronic(lang) });
-
-                }
+               
                 var serverPath = AppDomain.CurrentDomain.BaseDirectory;
 
                 var folder = $"{serverPath}\\MemberPortalApp\\{requestDto.Member_id}\\Approvals\\{request.ID}";
@@ -454,6 +446,7 @@ namespace MediConsultMobileApi.Controllers
                             Status = request.Status,
                             ApprovalPDF = file,
                             rejectReason = request.reject_reason,
+
                         };
 
                         reqDto.Add(reqDetalisEnDto);
