@@ -53,6 +53,7 @@ namespace MediConsultMobileApi.Controllers
                 {
                     return BadRequest(new MessageDto { Message = Messages.EnterProvider(lang) });
                 }
+               
                 if (!providerExists)
                 {
                     return BadRequest(new MessageDto { Message = Messages.ProviderNotFound(lang) });
@@ -66,6 +67,10 @@ namespace MediConsultMobileApi.Controllers
                 {
                     return BadRequest(new MessageDto { Message = Messages.MemberNotFound(lang) });
 
+                }
+                if (requestDto.Is_chronic is null)
+                {
+                    return BadRequest(new MessageDto { Message = Messages.EnterIsChronic(lang) });
                 }
                 var provider = providerRepo.GetProvider(requestDto.Provider_id);
 
@@ -216,7 +221,10 @@ namespace MediConsultMobileApi.Controllers
                     return BadRequest(new MessageDto { Message = Messages.MemberNotFound(lang) });
 
                 }
-
+                if (requestDto.Is_chronic is null)
+                {
+                    return BadRequest(new MessageDto { Message = Messages.EnterIsChronic(lang) });
+                }
                 var serverPath = AppDomain.CurrentDomain.BaseDirectory;
 
                 var folder = $"{serverPath}\\MemberPortalApp\\{requestDto.Member_id}\\Approvals\\{request.ID}";

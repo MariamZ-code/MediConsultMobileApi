@@ -12,7 +12,7 @@ namespace MediConsultMobileApi.Models
         public string approval_status { get; set; }
         public string approval_date { get; set; }
         public string approval_validation_period { get; set; }
-        public int? client_id { get; set; }
+        public int client_id { get; set; }
         public int Client_Branch_id { get; set; }
         public int policy_id { get; set; }
         public int program_id { get; set; }

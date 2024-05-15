@@ -6,6 +6,7 @@ namespace MediConsultMobileApi.DTO
     {
         public string? Notes { get; set; }
         public int? Provider_id { get; set; }
+        public int? Is_chronic { get; set; }
         public int? Member_id { get; set; }
         public List<IFormFile>? Photos { get; set; }
         public List<string>? DeletePhotos { get; set; }

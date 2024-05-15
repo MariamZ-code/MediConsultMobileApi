@@ -216,6 +216,10 @@
         {
             return language == "ar" ? "يرجي إدخال مقدم الخدمة" : "Please Enter Provider Id";
         }
+        public static string EnterIsChronic(string language)
+        {
+            return language == "ar" ? "يرجي إدخال هل ادوية مزمنة ام لا 0 او 1" : "Please Enter 0 if Approval is not Chronic & 1 if Chronic";
+        }
         public static string RequestNotFound(string language)
         {
             return language == "ar" ? "لم يتم العثور على الطلب" : "Request not found";

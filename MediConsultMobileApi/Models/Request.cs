@@ -14,6 +14,7 @@ namespace MediConsultMobileApi.Models
         public string? created_date { get; set; } = DateTime.Now.ToString("dd-MM-yyyy");
         public int? Provider_location_id { get; set; } = 0;
         public int? Member_id { get; set; }
+        public int? is_chronic { get; set; }
 
         [StringLength(100)]
         public string? Status { get; set; } = "Received";

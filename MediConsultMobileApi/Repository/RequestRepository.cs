@@ -30,6 +30,7 @@ namespace MediConsultMobileApi.Repository
                 Provider_id = requestDto.Provider_id,
                 Notes = requestDto.Notes,
                 Member_id = requestDto.Member_id,
+                is_chronic= requestDto.Is_chronic,
 
             };
             var provider = dbContext.Providers.FirstOrDefault(p => p.provider_id == request.Provider_id);
@@ -66,6 +67,7 @@ namespace MediConsultMobileApi.Repository
             request.Notes= requestDto.Notes;
             request.Provider_id = requestDto.Provider_id;
             request.Member_id = requestDto.Member_id;
+            request.is_chronic= requestDto.Is_chronic;
             if(request.Status == "OnHold")
             {
                 request.Status = "Received";

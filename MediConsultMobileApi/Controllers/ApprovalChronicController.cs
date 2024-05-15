@@ -182,7 +182,7 @@ namespace MediConsultMobileApi.Controllers
 
         #region InsertApprovalChronic
         [HttpPost("InsertChronicApproval")]
-        public async Task<IActionResult> InsertChronic([Required] int memberId, string lang, AddChronicApprovalDto approvalDto)
+        public async Task<IActionResult> InsertChronic(int memberId,[FromForm] AddChronicApprovalDto approvalDto, string lang)
         {
 
             if (!ModelState.IsValid)
@@ -246,7 +246,7 @@ namespace MediConsultMobileApi.Controllers
                 Act_Grand_Total = 0,
                 Act_Total_Amount = 0,
                 Act_Status = "Approved",
-                Act_Status_Reason = null,
+                Act_Status_Reason = -1,
 
 
             };
@@ -254,6 +254,11 @@ namespace MediConsultMobileApi.Controllers
             if (med.unit2_name == "TABLET")
             {
                 pharmaAct.Act_Price = Convert.ToDecimal(med.sell_price) / Convert.ToDecimal(med.unit2_count);
+            }
+            else
+            {
+                pharmaAct.Act_Price = Convert.ToDecimal(med.sell_price);    
+
             }
 
             pharmaRepo.InsertPharmaApproval(pharmaAct);
@@ -277,89 +282,109 @@ namespace MediConsultMobileApi.Controllers
 
             #region ApprovalRequestTable
 
-            //var serverPath = AppDomain.CurrentDomain.BaseDirectory;
-            //const long maxSizeBytes = 5 * 1024 * 1024;
+            const long maxSizeBytes = 5 * 1024 * 1024;
+          
+            var memberExists = memberRepo.MemberExists(memberId);
+            if (approvalDto.notes is null)
+            {
+                return BadRequest(new MessageDto { Message = Messages.EnterNotes(lang) });
+            }
+            if (!memberExists)
+            {
+                return BadRequest(new MessageDto { Message = Messages.MemberNotFound(lang) });
+
+            }
+           
+
+            var serverPath = AppDomain.CurrentDomain.BaseDirectory;
 
 
-            //if (approvalDto.files.Count == 0)
-            //{
-            //    return BadRequest(new MessageDto { Message = Messages.NoFileUploaded(lang) });
+            if (approvalDto.files.Count == 0)
+            {
+                return BadRequest(new MessageDto { Message = Messages.NoFileUploaded(lang) });
 
-            //}
-            //for (int j = 0; j < approvalDto.files.Count; j++)
-            //{
+            }
+            for (int j = 0; j < approvalDto.files.Count; j++)
+            {
 
-            //    if (approvalDto.files[j].Length == 0)
-            //    {
-            //        return BadRequest(new MessageDto { Message = Messages.NoFileUploaded(lang) });
-            //    }
-            //    if (approvalDto.files[j].Length >= maxSizeBytes)
-            //    {
-            //        return BadRequest(new MessageDto { Message = Messages.SizeOfFile(lang) });
-            //    }
-            //    // image.png --0
-            //    switch (Path.GetExtension(approvalDto.files[j].FileName))
-            //    {
-            //        case ".pdf":
-            //        case ".png":
-            //        case ".jpg":
-            //        case ".jpeg":
-            //            break;
-            //        default:
-            //            return BadRequest(new MessageDto { Message = Messages.FileExtension(lang) });
-            //    }
-            //}
-            ////var request = requestRepo.AddRequest(requestDto);
-            //var folder = $"{serverPath}\\MemberPortalApp\\{memberId}\\ChronicApprovals\\{request.ID}";
+                if (approvalDto.files[j].Length == 0)
+                {
+                    return BadRequest(new MessageDto { Message = Messages.NoFileUploaded(lang) });
+                }
+                if (approvalDto.files[j].Length >= maxSizeBytes)
+                {
+                    return BadRequest(new MessageDto { Message = Messages.SizeOfFile(lang) });
+                }
+                // image.png --0
+                switch (Path.GetExtension(approvalDto.files[j].FileName))
+                {
+                    case ".pdf":
+                    case ".png":
+                    case ".jpg":
+                    case ".jpeg":
+                        break;
+                    default:
+                        return BadRequest(new MessageDto { Message = Messages.FileExtension(lang) });
+                }
+            }
+            var req = new RequestDTO
+            {
+                Notes = approvalDto.notes,
+                Member_id = memberId,
+                Provider_id = -1,
+                Is_chronic = 1
+            };
+            var request = requestRepo.AddRequest(req);
+            var folder = $"{serverPath}\\MemberPortalApp\\{memberId}\\ChronicApprovals\\{request.ID}";
+
+            //var folder = Path.Combine(serverPath, "MemberPortalApp", requestDto.Member_id.ToString(), "Approvals", request.ID.ToString());
+
+            for (int i = 0; i < approvalDto.files.Count; i++)
+            {
+                if (!Directory.Exists(folder))
+                {
+                    //Directory.Delete(folder, true); 
+                    Directory.CreateDirectory(folder);
+                }
+
+                string uniqueFileName = Guid.NewGuid().ToString() + "_" + approvalDto.files[i].FileName;
+
+                string filePath = Path.Combine(folder, uniqueFileName);
 
 
+                if (Path.GetExtension(uniqueFileName) != ".pdf")
+                {
 
-            //for (int i = 0; i < approvalDto.files.Count; i++)
-            //{
-            //    if (!Directory.Exists(folder))
-            //    {
-            //        //Directory.Delete(folder, true); 
-            //        Directory.CreateDirectory(folder);
-            //    }
+                    using (var stream = new MemoryStream())
+                    {
+                        // Read the uploaded image into a MemoryStream
+                        approvalDto.files[i].CopyTo(stream);
+                        stream.Seek(0, SeekOrigin.Begin);
 
-            //    string uniqueFileName = Guid.NewGuid().ToString() + "_" + approvalDto.files[i].FileName;
+                        // Load the image using ImageSharp
+                        using (var image = SixLabors.ImageSharp.Image.Load(stream))
+                        {
+                            // Compress the image
+                            image.Mutate(x => x.Resize(image.Width / 2, image.Height / 2));
 
-            //    string filePath = Path.Combine(folder, uniqueFileName);
+                            using (var outputStream = new FileStream(filePath, FileMode.Create))
+                            {
+                                image.Save(outputStream, new JpegEncoder());
+                            }
+                        }
+                    }
 
+                }
+                else
+                {
+                    using (FileStream stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await approvalDto.files[i].CopyToAsync(stream);
+                    }
+                }
 
-            //    if (Path.GetExtension(uniqueFileName) != ".pdf")
-            //    {
+            }
 
-            //        using (var stream = new MemoryStream())
-            //        {
-            //            // Read the uploaded image into a MemoryStream
-            //            approvalDto.files[i].CopyTo(stream);
-            //            stream.Seek(0, SeekOrigin.Begin);
-
-            //            // Load the image using ImageSharp
-            //            using (var image = SixLabors.ImageSharp.Image.Load(stream))
-            //            {
-            //                // Compress the image
-            //                image.Mutate(x => x.Resize(image.Width / 2, image.Height / 2));
-
-            //                using (var outputStream = new FileStream(filePath, FileMode.Create))
-            //                {
-            //                    image.Save(outputStream, new JpegEncoder());
-            //                }
-            //            }
-            //        }
-
-            //    }
-            //    else
-            //    {
-            //        using (FileStream stream = new FileStream(filePath, FileMode.Create))
-            //        {
-            //            await approvalDto.files[i].CopyToAsync(stream);
-            //        }
-            //    }
-
-            //}
-            //return Ok(request);
             #endregion
 
 

@@ -10,6 +10,7 @@ namespace MediConsultMobileApi.DTO
 
        
         public int? Provider_id { get; set; }
+        public int? Is_chronic { get; set; }
 
         [JsonIgnore]
         public int? Member_id { get; set; }
