@@ -394,9 +394,9 @@ namespace MediConsultMobileApi.Controllers
 
                 }
 
-                if (endDate is not null && startDate is null )
+                if (endDate is not null && startDate is null)
                 {
-                    return NotFound(new MessageDto { Message = "Enter start Date"});
+                    return NotFound(new MessageDto { Message = "Enter start Date" });
                 }
 
                 if (endDate is null && startDate is not null)
@@ -450,7 +450,7 @@ namespace MediConsultMobileApi.Controllers
                             Id = request.ID,
                             CreatedDate = request.created_date,
                             ApprovalId = request.Approval_id,
-                            ProviderName = request.Provider.provider_name_en,
+                            ProviderName = request.Provider?.provider_name_en,
                             Status = request.Status,
                             ApprovalPDF = file,
                             rejectReason = request.reject_reason,
@@ -598,6 +598,7 @@ namespace MediConsultMobileApi.Controllers
                         Notes = request.Notes,
                         FolderPath = fileNameList,
                         Status = request.Status,
+                        Is_Chronic= request.is_chronic
 
 
                     };
@@ -631,7 +632,8 @@ namespace MediConsultMobileApi.Controllers
                     rejectReason = request.Approval?.reject_reason,
                     ProviderId = request.Provider_id,
                     Notes = request.Notes,
-                    FolderPath = fileNameList
+                    FolderPath = fileNameList,
+                    Is_Chronic = request.is_chronic
 
                 };
                 if (request.provider_portal_request_id > 0)

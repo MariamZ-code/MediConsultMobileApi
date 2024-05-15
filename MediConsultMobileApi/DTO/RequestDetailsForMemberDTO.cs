@@ -11,6 +11,8 @@ namespace MediConsultMobileApi.DTO
         public string? rejectReason { get; set; }
         public int? ApprovalId { get; set; }
         public string? ApprovalPDF { get; set; }
-       
+        public int? is_chronic { get; set; }
+
+
     }
 }

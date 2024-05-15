@@ -37,7 +37,7 @@ namespace MediConsultMobileApi.Models
         [ForeignKey("Provider")]
         public int? Provider_id { get; set; }
 
-        public virtual ProviderData Provider { get; set; }
+        public virtual ProviderData? Provider { get; set; }
 
         [ForeignKey("Approval")]
         public int? Approval_id { get; set; } = null;

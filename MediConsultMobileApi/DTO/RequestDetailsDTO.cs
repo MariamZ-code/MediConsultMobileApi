@@ -10,6 +10,8 @@ namespace MediConsultMobileApi.DTO
         public string? ApprovalPDF { get; set; } 
         public bool Allow_Edit { get; set; }
         public int? ProviderId { get; set; }
+        public int? Is_Chronic { get; set; }
+        
         public string ProviderName { get; set; }    
         public string? Status { get; set; }
         public string? Notes { get; set; }
