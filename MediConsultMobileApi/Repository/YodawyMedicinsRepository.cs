@@ -13,6 +13,9 @@ namespace MediConsultMobileApi.Repository
             this.dbContext = dbContext;
         }
         public async Task<List<YodawyMedicins>> GetAll() => await dbContext.YodawyMedicins.ToListAsync();
-        public async Task<YodawyMedicins> GetAllById(int medId) => await dbContext.YodawyMedicins.FirstOrDefaultAsync(m=>m.id==medId);
+      
+        public async Task<YodawyMedicins> GetById(int medId) => await dbContext.YodawyMedicins.FirstOrDefaultAsync(m=>m.id==medId);
+
+        public async Task<bool> MedicinsExists(int medId) =>await dbContext.YodawyMedicins.AnyAsync(y=>y.id==medId);
     }
 }

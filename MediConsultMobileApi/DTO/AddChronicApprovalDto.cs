@@ -8,6 +8,6 @@
         public string? unit_name { get; set; }
         public string? notes { get; set; }
 
-        public List<IFormFile> files { get; set; }
+        public List<IFormFile>? files { get; set; }
     }
 }
