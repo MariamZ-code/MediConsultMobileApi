@@ -1,4 +1,5 @@
-﻿using MediConsultMobileApi.DTO;
+﻿using iText.Layout.Element;
+using MediConsultMobileApi.DTO;
 using MediConsultMobileApi.Models;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -29,7 +30,10 @@ namespace MediConsultMobileApi.Controllers
             try
             {
                 // Combine the web root path with the requested file path
-                string absolutePath = Path.Combine(webHostEnvironment.WebRootPath, filePath);
+                string absolutePath = Path.Combine(webHostEnvironment.WebRootPath, filePath).Replace("\\\\" , "\\");
+
+                
+                  
 
                 // Check if the file exists
                 if (System.IO.File.Exists(absolutePath))
