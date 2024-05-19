@@ -13,6 +13,12 @@ namespace MediConsultMobileApi.Models
         public string location_area_ar { get; set; }
         public string? location_address_en { get; set; }
         public string location_address_ar { get; set; }
+        public string? location_telephone_1 { get; set; }
+        public string? location_telephone_2 { get; set; }
+        public string? location_mobile_1 { get; set; }
+        public string? location_mobile_2 { get; set; }
+        public string? hotline { get; set; }
+
         [ForeignKey(nameof(AppSelectorGovernment))]
         public int Location_government_id { get; set; }
         public AppSelectorGovernment AppSelectorGovernment { get; set; }

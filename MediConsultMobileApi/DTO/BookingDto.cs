@@ -12,6 +12,11 @@
         public string Category_Name { get; set; }
         public string Specialist_Name { get; set; }
         public string Sub_Specialist_Name { get; set; }
+        public string? Telephone_1 { get; set; }
+        public string? Telephone_2 { get; set; }
+        public string? Mobile_1 { get; set; }
+        public string? Mobile_2 { get; set; }
+        public string? HotLine { get; set; }
 
     }
 }

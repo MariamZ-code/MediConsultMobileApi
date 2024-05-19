@@ -113,23 +113,26 @@ namespace MediConsultMobileApi.Controllers
 
                                 bookingDto.Specialist_Name = specialist.GeneralSpecialty.General_Specialty_Name_En;
                                 bookingDto.Sub_Specialist_Name = specialist.subGeneralSpecialty.Specialty_Name_En;
-                                bookingDto.Area = location.location_area_en;
-                                bookingDto.Address = location.location_address_en;
                             }
                             else
                             {
                                 bookingDto.Specialist_Name = specialist.GeneralSpecialty.General_Specialty_Name_Ar;
                                 bookingDto.Sub_Specialist_Name = specialist.subGeneralSpecialty.Specialty_Name_Ar;
-                                bookingDto.Area = location.location_area_ar;
-                                bookingDto.Address = location.location_address_ar;
 
                             }
                         }
                     }
                     bookingDto.Location_id = location.location_id;
                     bookingDto.Provider_id = location.provider_id;
+                    bookingDto.Telephone_1 = location.location_telephone_1;
+                    bookingDto.Telephone_2= location.location_telephone_2;
+                    bookingDto.Mobile_1= location.location_mobile_1;
+                    bookingDto.Mobile_2= location.location_mobile_2;
+                    bookingDto.HotLine = location.hotline;
                     if (lang == "en")
                     {
+                        bookingDto.Area = location.location_area_en;
+                        bookingDto.Address = location.location_address_en;
                         bookingDto.City_Name = location.AppSelectorGovernmentCity.city_name_en;
                         bookingDto.Government_Name = location.AppSelectorGovernmentCity.appSelectorGovernment.government_name_en;
                         bookingDto.Provider_Name = location.Provider.provider_name_en;
@@ -140,6 +143,8 @@ namespace MediConsultMobileApi.Controllers
                     else
                     {
 
+                        bookingDto.Area = location.location_area_ar;
+                        bookingDto.Address = location.location_address_ar;
                         bookingDto.City_Name = location.AppSelectorGovernmentCity.city_name_ar;
                         bookingDto.Government_Name = location.AppSelectorGovernmentCity.appSelectorGovernment.government_name_ar;
                         bookingDto.Provider_Name = location.Provider.provider_name_ar;
@@ -285,7 +290,7 @@ namespace MediConsultMobileApi.Controllers
 
                 var folder = $"{serverPath}\\MemberPortalApp\\{bookingDto.member_id}\\Booking\\{newBooking.id}";
 
-              
+
 
                 for (int i = 0; i < bookingDto.attachment.Count; i++)
                 {
@@ -330,7 +335,7 @@ namespace MediConsultMobileApi.Controllers
                 }
 
 
-                return Ok(new MessageDto { Message = Messages.BookingReceived(lang)});
+                return Ok(new MessageDto { Message = Messages.BookingReceived(lang) });
             }
             return BadRequest(ModelState);
         }
@@ -483,8 +488,8 @@ namespace MediConsultMobileApi.Controllers
                     return BadRequest(new MessageDto { Message = Messages.MemberNotFound(lang) });
                 }
 
-                var bookings = bookingRepo.GetBookingByMemberId(memberId); 
-               
+                var bookings = bookingRepo.GetBookingByMemberId(memberId);
+
                 if (lang == "en")
                 {
                     if (bookingFilter.cityName is not null || bookingFilter.govName is not null)
@@ -499,7 +504,7 @@ namespace MediConsultMobileApi.Controllers
                     {
                         bookings = bookings.Where(p => p.Provider.Category.Category_Name_En.Contains(bookingFilter.categoryName));
                     }
-                 
+
                 }
                 else
                 {
@@ -516,7 +521,7 @@ namespace MediConsultMobileApi.Controllers
                     {
                         bookings = bookings.Where(p => p.Provider.Category.Category_Name_Ar.Contains(bookingFilter.categoryName));
                     }
-                 
+
                 }
 
                 var historyBookings = new List<HistoryBookingDto>();
@@ -533,7 +538,7 @@ namespace MediConsultMobileApi.Controllers
 
 
                     };
-                   
+
                     if (lang == "en")
                     {
                         historyBooking.areaName = booking.ProviderLocation.location_area_en;
@@ -551,7 +556,7 @@ namespace MediConsultMobileApi.Controllers
                         {
                             historyBooking.specialtyName = specialty.GeneralSpecialty.General_Specialty_Name_En;
                             historyBooking.subSpecialtyName = specialty.subGeneralSpecialty.Specialty_Name_En;
-                            
+
                         }
                     }
                     else
@@ -569,7 +574,7 @@ namespace MediConsultMobileApi.Controllers
                         }
                         else
                         {
-                            
+
                             historyBooking.specialtyName = specialty.GeneralSpecialty.General_Specialty_Name_Ar;
                             historyBooking.subSpecialtyName = specialty.subGeneralSpecialty.Specialty_Name_Ar;
                         }
@@ -595,7 +600,7 @@ namespace MediConsultMobileApi.Controllers
                 var booking = bookingRepo.GetById(bookingId);
                 var bookingExists = bookingRepo.BookingExists(bookingId);
 
-             
+
                 if (!bookingExists)
                 {
                     return BadRequest(new MessageDto { Message = Messages.BookingNotFound(lang) });
@@ -677,7 +682,7 @@ namespace MediConsultMobileApi.Controllers
                     return BadRequest(new MessageDto { Message = Messages.BookingNotFound(lang) });
                 }
 
-                if (booking.status !="Received")
+                if (booking.status != "Received")
                 {
                     return NotFound(new MessageDto { Message = Messages.CantDeleted(lang) });
 
