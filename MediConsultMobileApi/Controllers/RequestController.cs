@@ -429,8 +429,16 @@ namespace MediConsultMobileApi.Controllers
                             {
                                 WebClient client = new WebClient();
                                 file = client.DownloadString(new Uri(url));
+                                if (file.StartsWith("404"))
+                                {
+                                    file = string.Empty;
+                                }
+                                else
+                                {
                                 file = file.Replace(@"/hcms/C:\inetpub\wwwroot\hcms_v1\", string.Empty);
                                 file = ExtractUrl(file);
+                                    
+                                }
 
                             }
                         }

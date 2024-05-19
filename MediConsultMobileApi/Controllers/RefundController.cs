@@ -173,7 +173,7 @@ namespace MediConsultMobileApi.Controllers
                 }
 
                 var memberExists = memberRepo.MemberExists(refundDto.member_id);
-             
+
 
                 if (refundDto.notes is null)
                 {
@@ -244,8 +244,8 @@ namespace MediConsultMobileApi.Controllers
                     }
                 }
 
-               
-                    if (refundDto.Photos is not null)
+
+                if (refundDto.Photos is not null)
                 {
                     for (int j = 0; j < refundDto.Photos.Count; j++)
                     {
@@ -394,15 +394,15 @@ namespace MediConsultMobileApi.Controllers
                         {
                             WebClient client = new WebClient();
                             file = client.DownloadString(new Uri(url));
-                                if (file.StartsWith("404"))
-                                {
-                                    file = string.Empty;
+                            if (file.StartsWith("404"))
+                            {
+                                file = string.Empty;
                             }
                             else
                             {
 
-                            file = file.Replace(@"C:\inetpub\wwwroot\hcms_v1\", string.Empty);
-                            file = ExtractUrl(file);
+                                file = file.Replace(@"C:\inetpub\wwwroot\hcms_v1\", string.Empty);
+                                file = ExtractUrl(file);
                             }
 
                         }
@@ -418,7 +418,7 @@ namespace MediConsultMobileApi.Controllers
                         Note = refund.notes,
                         refund_reason = refund.refund_reason,
                         RefundPDF = file,
-                        RefundId= refund.refund_id,
+                        RefundId = refund.refund_id,
                         reject_reason = refund.reject_reason,
 
 
@@ -507,7 +507,7 @@ namespace MediConsultMobileApi.Controllers
                     Amount = refund.total_amount
 
                 };
-           
+
                 switch (refund.Status)
                 {
                     case "Received":
