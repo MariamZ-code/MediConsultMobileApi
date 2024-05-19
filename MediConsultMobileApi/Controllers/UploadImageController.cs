@@ -22,7 +22,7 @@ namespace MediConsultMobileApi.Controllers
             this.webHostEnvironment = webHostEnvironment;
         }
 
-    
+
 
         [HttpGet("getPhoto/{filePath}")]
         public IActionResult GetPhoto(string filePath)
@@ -30,10 +30,10 @@ namespace MediConsultMobileApi.Controllers
             try
             {
                 // Combine the web root path with the requested file path
-                string absolutePath = Path.Combine(webHostEnvironment.WebRootPath, filePath).Replace("\\\\" , "\\");
+                string absolutePath = Path.Combine(webHostEnvironment.WebRootPath, filePath).Replace("\\\\", "\\");
 
-                
-                  
+
+
 
                 // Check if the file exists
                 if (System.IO.File.Exists(absolutePath))
@@ -75,26 +75,32 @@ namespace MediConsultMobileApi.Controllers
         public IActionResult DownloadFile([Required] int approval_id)
         {
             var downloadFile = new DownloadFileDTO();
-            
+
             string url = $"https://hcms.mediconsulteg.com/generate_approval_page.aspx?approval_id={approval_id}";
 
             string file = string.Empty;
-          
-                if (Path.Exists($@"C:\inetpub\wwwroot\hcms_v1\tempFiles\{approval_id}.pdf"))
+
+            if (Path.Exists($@"C:\inetpub\wwwroot\hcms_v1\tempFiles\{approval_id}.pdf"))
+            {
+                file = $"https://hcms.mediconsulteg.com/tempFiles/{approval_id}.pdf";
+            }
+            else
+            {
+                WebClient client = new WebClient();
+                file = client.DownloadString(new Uri(url));
+                if (file.StartsWith("404"))
                 {
-                    file = $"https://hcms.mediconsulteg.com/tempFiles/{approval_id}.pdf";
+                    file = string.Empty;
                 }
                 else
                 {
-                    WebClient client = new WebClient();
-                    file = client.DownloadString(new Uri(url));
                     file = file.Replace(@"C:\inetpub\wwwroot\hcms_v1\", string.Empty);
                     file = ExtractUrl(file);
-
                 }
-                downloadFile.FileName = file;
-                return Ok(downloadFile);
-            
+            }
+            downloadFile.FileName = file;
+            return Ok(downloadFile);
+
         }
 
         [HttpGet("DownloadFileRefund")]
@@ -113,8 +119,15 @@ namespace MediConsultMobileApi.Controllers
             {
                 WebClient client = new WebClient();
                 file = client.DownloadString(new Uri(url));
-                file = file.Replace(@"C:\inetpub\wwwroot\hcms_v1\", string.Empty);
-                file = ExtractUrl(file);
+                if (file.StartsWith("404"))
+                {
+                    file = string.Empty;
+                }
+                else
+                {
+                    file = file.Replace(@"C:\inetpub\wwwroot\hcms_v1\", string.Empty);
+                    file = ExtractUrl(file);
+                }
 
             }
             downloadFile.FileName = file;
