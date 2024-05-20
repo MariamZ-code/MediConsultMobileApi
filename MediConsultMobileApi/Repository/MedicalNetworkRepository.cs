@@ -19,5 +19,7 @@ namespace MediConsultMobileApi.Repository
             var medicalResult =  dbContext.medicalNetworks.AsNoTracking().AsQueryable();
             return medicalResult;
         }
+
+        public PortalUsersTable GetByProviderId(int providerId) => dbContext.portalUsersTables.FirstOrDefault(p=> p.provider_id == providerId);
     }
 }

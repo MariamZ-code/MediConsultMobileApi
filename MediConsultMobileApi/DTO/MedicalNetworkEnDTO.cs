@@ -15,6 +15,7 @@
 
         public string Category { get; set; }
         public string? SpecialtyName { get; set; }
+        public int? Is_online { get; set; }
 
 
     }

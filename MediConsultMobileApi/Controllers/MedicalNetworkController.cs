@@ -17,7 +17,7 @@ namespace MediConsultMobileApi.Controllers
         private readonly IMedicalNetworkRepository medicalRepo;
         private readonly IProviderLocationRepository locationRepo;
 
-        public MedicalNetworkController(IMedicalNetworkRepository medicalRepo , IProviderLocationRepository locationRepo)
+        public MedicalNetworkController(IMedicalNetworkRepository medicalRepo, IProviderLocationRepository locationRepo)
         {
             this.medicalRepo = medicalRepo;
             this.locationRepo = locationRepo;
@@ -58,7 +58,11 @@ namespace MediConsultMobileApi.Controllers
 
                     var totalCount = medicalNets.Count();
                     medicalNets = medicalNets.Skip((StartPage - 1) * pageSize).Take(pageSize);
-                    if (medicalNets == null) { return BadRequest(new MessageDto { Message = Messages.MedicalNetwork(lang) }); }
+                    if (medicalNets == null)
+                    {
+                        return BadRequest(new MessageDto { Message = Messages.MedicalNetwork(lang) }); 
+                    }
+
                     var medicalNetList = medicalNets.ToList();
                     foreach (var medicalNet in medicalNetList)
                     {
@@ -66,6 +70,9 @@ namespace MediConsultMobileApi.Controllers
                             !medicalNet.Latitude.Contains(",") && !medicalNet.Longitude.Contains(","))
                         {
                             var address = locationRepo.GetProviderLocationsByProviderId(medicalNet.provider_id, medicalNet.location_id);
+
+                            var providerOnline = medicalRepo.GetByProviderId(medicalNet.provider_id);
+                            
 
                             MedicalNetworkEnDTO medicalNetEnDto = new MedicalNetworkEnDTO
                             {
@@ -79,11 +86,19 @@ namespace MediConsultMobileApi.Controllers
                                 Mobile = medicalNet.Mobile,
                                 Telephone = medicalNet.Telephone,
                                 Government = medicalNet.government_name_en,
-                                City= medicalNet.city_name_en,
+                                City = medicalNet.city_name_en,
                                 SpecialtyName = medicalNet.General_Specialty_Name_En,
-                                ProviderAddress= address.location_address_en
+                                ProviderAddress = address.location_address_en,
+                                
                             };
-
+                            if (providerOnline is null)
+                            {
+                                medicalNetEnDto.Is_online = 0;
+                            }
+                            else
+                            {
+                                medicalNetEnDto.Is_online = providerOnline.is_enabled;
+                            }
                             medicalNetEn.Add(medicalNetEnDto);
                         }
 
@@ -126,12 +141,12 @@ namespace MediConsultMobileApi.Controllers
                     }
                     medicalNets = medicalNets.Where(c => categories.Contains(c.Category));
                 }
-              
+
 
                 var totalCountt = medicalNets.Count();
                 medicalNets = medicalNets.Skip((StartPage - 1) * pageSize).Take(pageSize);
                 if (medicalNets == null) { return BadRequest(new MessageDto { Message = Messages.MedicalNetwork(lang) }); }
-                    var medicalNetListAR = medicalNets.ToList();
+                var medicalNetListAR = medicalNets.ToList();
 
                 foreach (var medicalNet in medicalNetListAR)
                 {
@@ -153,9 +168,9 @@ namespace MediConsultMobileApi.Controllers
                             Government = medicalNet.government_name_ar,
                             City = medicalNet.city_name_ar,
                             SpecialtyName = medicalNet.Speciality,
-                            ProviderAddress= address.location_address_ar
+                            ProviderAddress = address.location_address_ar
                         };
-                    medicalNetAr.Add(medicalNetArDto);
+                        medicalNetAr.Add(medicalNetArDto);
                     }
 
 
