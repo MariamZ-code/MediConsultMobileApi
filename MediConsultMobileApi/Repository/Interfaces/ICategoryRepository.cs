@@ -7,5 +7,6 @@ namespace MediConsultMobileApi.Repository.Interfaces
     {
         Task<List<Category>> GetAll();
         List<CountOfCategoriesDTO> GetCountOfCategories();
+        List<CountOfCategoriesDTO> GetCategories();
     }
 }

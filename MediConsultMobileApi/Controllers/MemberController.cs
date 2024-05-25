@@ -328,33 +328,7 @@ namespace MediConsultMobileApi.Controllers
 
                 }
 
-                //if (memberDTO.SSN is not null)
-                //{
-
-                //    if (!long.TryParse(memberDTO.SSN, out _))
-                //    {
-                //        return BadRequest(new MessageDto { Message = Messages.NationalIdNumber(lang) });
-
-
-                //    }
-                //    if (memberDTO.SSN.Length != 14)
-                //    {
-                //        return BadRequest(new MessageDto { Message = Messages.NationalIdFormat(lang) });
-
-
-                //    }
-                //    if (existingMemberWithSameNationalId != null && existingMemberWithSameNationalId.member_id != id)
-                //    {
-                //        return BadRequest(new MessageDto { Message = Messages.NationalIdExist(lang) });
-
-                //    }
-
-                //var (date, gender) = memberRepo.CreateDateAndGender(memberDTO.SSN);
-                //    if (!memberRepo.IsValidDate(date))
-                //    {
-                //        return BadRequest(new MessageDto { Message = Messages.NationalIdInvalid(lang) });
-                //    }
-                //}
+           
 
 
                 if (memberDTO.Photo is not null)

@@ -61,5 +61,43 @@ namespace MediConsultMobileApi.Controllers
             return BadRequest(ModelState);
         }
 
+        [HttpGet("LabsAndScan")]
+        public async Task<IActionResult> GetAllLabAndScan(string lang)
+        {
+            if (ModelState.IsValid)
+            {
+                RecurringJob.AddOrUpdate(() => hangFire.SendNotificationHangFire(lang), Cron.Minutely);
+                var categories = categoryRepo.GetCategories();
+
+                var categoriesDto = new List<CategoryDTO>();
+                foreach (var category in categories)
+                {
+                    CategoryDTO categoryDto = new CategoryDTO
+                    {
+
+                        Category_Id = category.Category_Id,
+                        Count = category.ProviderCount
+
+                    };
+                    if (lang == "en")
+                    {
+                        categoryDto.Category_Name = category.Category_Name_En.Replace("\t", "");
+
+                    }
+                    else
+                    {
+                        categoryDto.Category_Name = category.Category_Name_Ar.Replace("\t", "");
+
+                    }
+                    categoriesDto.Add(categoryDto);
+                }
+
+                return Ok(categoriesDto);
+
+
+            }
+            return BadRequest(ModelState);
+        }
+
     }
 }
