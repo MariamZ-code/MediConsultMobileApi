@@ -20,6 +20,14 @@ namespace MediConsultMobileApi.Repository
                                               .Where(c => c.Provider.provider_status == "Activated")
                                               .AsNoTracking().AsQueryable();
         }
+        public IQueryable<ProviderLocation> GetProviderLocationsLabAndScan(int categoryId)
+        {
+            return dbContext.providerLocations.Include(c => c.AppSelectorGovernmentCity)
+                                              .ThenInclude(g => g.appSelectorGovernment)
+                                              .Include(p => p.Provider).ThenInclude(c => c.Category)
+                                              .Where(c => c.Provider.provider_status == "Activated"&&c.Provider.Category_ID== categoryId)
+                                              .AsNoTracking().AsQueryable();
+        }
         public ProviderLocation GetProviderLocationsByProviderId(int providerId, int locationId)
         {
             return dbContext.providerLocations.FirstOrDefault(p => p.provider_id == providerId && p.location_id == locationId);

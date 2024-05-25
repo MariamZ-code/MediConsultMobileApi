@@ -7,6 +7,7 @@ namespace MediConsultMobileApi.Repository.Interfaces
         IQueryable<ProviderLocation> GetProviderLocations();
         ProviderLocation GetProviderLocationsByLocationId(int? locationId);
         ProviderLocation GetProviderLocationsByProviderId(int providerId ,int locationId);
+        IQueryable<ProviderLocation> GetProviderLocationsLabAndScan(int categoryId);
         bool ProviderLocationExists(int? locationId);
     }
 }

@@ -325,6 +325,10 @@
         {
             return language == "ar" ? "تم الحجز بنجاح" : "Booking Received";
         }
+        public static string CategoryNotFound(string language)
+        {
+            return language == "ar" ? "هذا فئة غير موجودة" : "Category is not Found";
+        }
         //BookingReceived
 
     }

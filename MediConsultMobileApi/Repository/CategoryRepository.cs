@@ -46,5 +46,10 @@ namespace MediConsultMobileApi.Repository
                })
                .OrderBy(x => x.Category_Id)
                    .ToList();
+
+        public bool CategoryExsists(int categoryId)
+        {
+            return dbContext.Categories.Any(c=>c.Category_Id == categoryId);
+        }
     }
 }
