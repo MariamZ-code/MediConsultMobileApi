@@ -690,6 +690,8 @@ namespace MediConsultMobileApi.Controllers
         }
         #endregion
 
+
+
         #region DeleteBooking
         [HttpPost("DeleteBooking")]
         public async Task<IActionResult> DeleteBooking(string lang, int? bookingId)

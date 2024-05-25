@@ -63,6 +63,7 @@ namespace MediConsultMobileApi.Models
         public DbSet<ApprovalTimeline> ApprovalTimelines { get; set; }
         public DbSet<WorkTime> workTimes { get; set; }
         public DbSet<ProviderWorktime> ProviderWorktimes { get; set; }
+        public DbSet<ProviderRating> ProviderRatings { get; set; }
 
     }
 }

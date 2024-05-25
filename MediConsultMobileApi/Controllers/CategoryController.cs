@@ -30,33 +30,44 @@ namespace MediConsultMobileApi.Controllers
             {
                 RecurringJob.AddOrUpdate(() => hangFire.SendNotificationHangFire(lang), Cron.Minutely);
                 var categories =  categoryRepo.GetCountOfCategories();
-               
-                    var categoriesDto = new List<CategoryDTO>();
+
+                if (lang == "en")
+                {
+                    var categoriesEnDto = new List<CategoryEnDTO>();
                     foreach (var category in categories)
                     {
-                        CategoryDTO categoryDto = new CategoryDTO
+
+                        CategoryEnDTO categoryEnDto = new CategoryEnDTO
                         {
 
                             Category_Id = category.Category_Id,
-                            Count= category.ProviderCount
-                            
-                        };
-                        if (lang== "en")
-                        {
-                            categoryDto.Category_Name = category.Category_Name_En.Replace("\t", "");
-                            
-                        }
-                        else
-                        {
-                            categoryDto.Category_Name = category.Category_Name_Ar.Replace("\t", "");
+                            Category_Name_En = category.Category_Name_En.Replace("\t", ""),
+                            Count = category.ProviderCount
 
-                        }
-                        categoriesDto.Add(categoryDto);
+                        };
+
+                        categoriesEnDto.Add(categoryEnDto);
                     }
 
-                    return Ok(categoriesDto);
+                    return Ok(categoriesEnDto);
+                }
+                var categoriesArDto = new List<CategoryArDTO>();
+                foreach (var category in categories)
+                {
 
-               
+                    CategoryArDTO categoryArDto = new CategoryArDTO
+                    {
+
+                        Category_Id = category.Category_Id,
+                        Category_Name_Ar = category.Category_Name_Ar.Replace("\t", ""),
+                        Count = category.ProviderCount
+
+                    };
+
+                    categoriesArDto.Add(categoryArDto);
+                }
+                return Ok(categoriesArDto);
+
             }
             return BadRequest(ModelState);
         }
