@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using MediConsultMobileApi.Validations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MediConsultMobileApi.Models
 {
@@ -11,6 +12,10 @@ namespace MediConsultMobileApi.Models
         public string? notes { get; set; }
         public string? status { get; set; } = "Received";
         public string?  attachment { get; set; }
+        public string?  member_date { get; set; }
+
+        //[TimeFormat("h:mm:ss tt")]
+        public string?  member_time { get; set; } 
 
         [ForeignKey("member")]
 

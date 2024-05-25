@@ -273,6 +273,14 @@
         {
             return language == "ar" ? "يرجي إدخال الملاحظات" : "Please Enter Notes";
         }
+        public static string EnterDate(string language)
+        {
+            return language == "ar" ? "يرجي إدخال التاريخ" : "Please Enter Date";
+        }
+        public static string EnterTime(string language)
+        {
+            return language == "ar" ? "يرجي إدخال الوقت" : "Please Enter Time";
+        }
         public static string EnterReason(string language)
         {
             return language == "ar" ? "يرجي إدخال سبب الاسترداد" : "Please Enter Refund Reason";

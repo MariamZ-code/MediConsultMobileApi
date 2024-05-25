@@ -29,39 +29,34 @@ namespace MediConsultMobileApi.Controllers
             if (ModelState.IsValid)
             {
                 RecurringJob.AddOrUpdate(() => hangFire.SendNotificationHangFire(lang), Cron.Minutely);
-                var categories = await categoryRepo.GetAll();
-                if (lang == "en")
-                {
-                    var categoryEn = new List<CategoryEnDTO>();
+                var categories =  categoryRepo.GetCountOfCategories();
+               
+                    var categoriesDto = new List<CategoryDTO>();
                     foreach (var category in categories)
                     {
-                        CategoryEnDTO categoryEnDto = new CategoryEnDTO
+                        CategoryDTO categoryDto = new CategoryDTO
                         {
 
                             Category_Id = category.Category_Id,
-                            Category_Name_En = category.Category_Name_En,
+                            Count= category.ProviderCount
+                            
                         };
+                        if (lang== "en")
+                        {
+                            categoryDto.Category_Name = category.Category_Name_En.Replace("\t", "");
+                            
+                        }
+                        else
+                        {
+                            categoryDto.Category_Name = category.Category_Name_Ar.Replace("\t", "");
 
-                        categoryEn.Add(categoryEnDto);
+                        }
+                        categoriesDto.Add(categoryDto);
                     }
 
-                    return Ok(categoryEn);
+                    return Ok(categoriesDto);
 
-                }
-                var categoryAr = new List<CategoryArDTO>();
-                foreach (var category in categories)
-                {
-                    CategoryArDTO categoryArDto = new CategoryArDTO
-                    {
-
-                        Category_Id = category.Category_Id,
-                        Category_Name_Ar = category.Category_Name_Ar,
-                    };
-
-                    categoryAr.Add(categoryArDto);
-                }
-
-                return Ok(categoryAr);
+               
             }
             return BadRequest(ModelState);
         }

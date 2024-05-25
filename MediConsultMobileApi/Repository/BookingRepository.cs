@@ -26,7 +26,8 @@ namespace MediConsultMobileApi.Repository
             var booking = new Booking
             {
                 notes = bookingDto.notes,
-
+                member_date= bookingDto.date,
+                member_time= bookingDto.time,
                 provider_id = bookingDto.provider_id,
                 member_id = bookingDto.member_id,
                 provider_Location_id = bookingDto.provider_Location_id
@@ -50,7 +51,8 @@ namespace MediConsultMobileApi.Repository
             booking.notes = bookingDto.notes;
             booking.provider_id = bookingDto.provider_id;   
             booking.provider_Location_id = bookingDto.provider_Location_id;
-        
+            booking.time = bookingDto.time;
+            booking.date = bookingDto.date;
 
             var serverPath = AppDomain.CurrentDomain.BaseDirectory;
 

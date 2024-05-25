@@ -17,6 +17,7 @@ namespace MediConsultMobileApi.Repository
             return dbContext.providerLocations.Include(c => c.AppSelectorGovernmentCity)
                                               .ThenInclude(g => g.appSelectorGovernment)
                                               .Include(p => p.Provider).ThenInclude(c=>c.Category)
+                                              .Where(c => c.Provider.provider_status == "Activated")
                                               .AsNoTracking().AsQueryable();
         }
         public ProviderLocation GetProviderLocationsByProviderId(int providerId, int locationId)

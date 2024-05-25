@@ -1,4 +1,5 @@
-﻿using MediConsultMobileApi.Models;
+﻿using MediConsultMobileApi.DTO;
+using MediConsultMobileApi.Models;
 
 namespace MediConsultMobileApi.Repository.Interfaces
 {
@@ -6,5 +7,6 @@ namespace MediConsultMobileApi.Repository.Interfaces
     {
         IQueryable<ProviderSpecialty> GetProviderSpecialties();
         ProviderSpecialty GetProviderSpecialtiesByProviderId(int? providerId);
+        List<ProviderSpecialtyCountDTO> GetCountOfProviders();
     }
 }

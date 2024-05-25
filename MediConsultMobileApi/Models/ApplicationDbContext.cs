@@ -61,6 +61,8 @@ namespace MediConsultMobileApi.Models
 
         public DbSet<PortalUsersTable> portalUsersTables { get; set; }
         public DbSet<ApprovalTimeline> ApprovalTimelines { get; set; }
-        
+        public DbSet<WorkTime> workTimes { get; set; }
+        public DbSet<ProviderWorktime> ProviderWorktimes { get; set; }
+
     }
 }

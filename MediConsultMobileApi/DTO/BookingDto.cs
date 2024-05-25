@@ -4,6 +4,7 @@
     {
         public int Location_id { get; set; }
         public string City_Name { get; set; }
+        public string Status { get; set; }
         public string Government_Name { get; set; }
         public int Provider_id { get; set; }
         public string Provider_Name  { get; set; }
@@ -17,6 +18,7 @@
         public string? Mobile_1 { get; set; }
         public string? Mobile_2 { get; set; }
         public string? HotLine { get; set; }
+        public int? TotalProviders { get; set; }
 
     }
 }

@@ -43,8 +43,8 @@ namespace MediConsultMobileApi.Controllers
 
                 var locations = locationReppo.GetProviderLocations();
                 var specialists = specialRepo.GetProviderSpecialties();
-
-
+                var totalProviderCount = specialRepo.GetCountOfProviders().Count();
+                
                 if (lang == "en")
                 {
                     if (bookingFilter.cityName is not null)
@@ -100,12 +100,17 @@ namespace MediConsultMobileApi.Controllers
                     }
                 }
 
+
                 var convertSpecialists = specialists.ToList();
-                foreach (var location in locations)
+                var convertLocations = locations.ToList();
+                foreach (var location in convertLocations)
                 {
+
                     var bookingDto = new BookingDto();
+                    var totalProvidersSpecialty = 0;
                     foreach (var specialist in convertSpecialists)
                     {
+                       //totalProvidersSpecialty = specialRepo.GetProvidersSpecialtiesByProviderId(specialist.Specialty_Id).Count();
                         if (location.provider_id == specialist.provider_id)
                         {
                             if (lang == "en")
@@ -122,6 +127,7 @@ namespace MediConsultMobileApi.Controllers
                             }
                         }
                     }
+
                     bookingDto.Location_id = location.location_id;
                     bookingDto.Provider_id = location.provider_id;
                     bookingDto.Telephone_1 = location.location_telephone_1;
@@ -129,6 +135,9 @@ namespace MediConsultMobileApi.Controllers
                     bookingDto.Mobile_1= location.location_mobile_1;
                     bookingDto.Mobile_2= location.location_mobile_2;
                     bookingDto.HotLine = location.hotline;
+                    bookingDto.Status = location.Provider.provider_status;
+                    //bookingDto.TotalProviders = totalProvidersSpecialty;
+
                     if (lang == "en")
                     {
                         bookingDto.Area = location.location_area_en;
@@ -152,6 +161,8 @@ namespace MediConsultMobileApi.Controllers
 
 
                     }
+
+                    
                     bookingListDto.Add(bookingDto);
                     //}
                 }
@@ -189,6 +200,15 @@ namespace MediConsultMobileApi.Controllers
                 if (string.IsNullOrEmpty(bookingDto.notes))
                 {
                     return NotFound(new MessageDto { Message = Messages.EnterNotes(lang) });
+                }
+
+                if (string.IsNullOrEmpty(bookingDto.date))
+                {
+                    return NotFound(new MessageDto { Message = Messages.EnterDate(lang) });
+                }
+                if (string.IsNullOrEmpty(bookingDto.time))
+                {
+                    return NotFound(new MessageDto { Message = Messages.EnterTime(lang) });
                 }
                 if (bookingDto.member_id is null)
                 {
@@ -365,6 +385,14 @@ namespace MediConsultMobileApi.Controllers
                 if (string.IsNullOrEmpty(bookingDto.notes))
                 {
                     return NotFound(new MessageDto { Message = Messages.EnterNotes(lang) });
+                }
+                if (string.IsNullOrEmpty(bookingDto.date))
+                {
+                    return NotFound(new MessageDto { Message = Messages.EnterDate(lang) });
+                }
+                if (string.IsNullOrEmpty(bookingDto.time))
+                {
+                    return NotFound(new MessageDto { Message = Messages.EnterTime(lang) });
                 }
                 if (bookingDto.member_id is null)
                 {
