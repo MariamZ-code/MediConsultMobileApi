@@ -362,7 +362,7 @@ namespace MediConsultMobileApi.Controllers
 
                     var serverPath = AppDomain.CurrentDomain.BaseDirectory;
 
-                    var folder2 = Path.Combine(serverPath, "MemberPortalApp ", "Members" , result.member_id.ToString());
+                    var folder2 = Path.Combine(serverPath, "Members", id.ToString(), memberDTO.Photo.FileName);
 
 
 
