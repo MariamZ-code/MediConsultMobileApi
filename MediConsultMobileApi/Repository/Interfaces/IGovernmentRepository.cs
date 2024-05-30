@@ -4,6 +4,7 @@ namespace MediConsultMobileApi.Repository.Interfaces
 {
     public interface IGovernmentRepository
     {
-        List<AppSelectorGovernment> GetGovernments();
+        IQueryable<AppSelectorGovernment> GetGovernments();
+        bool GovernmentExsists (int governmentId);
     }
 }

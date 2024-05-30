@@ -329,7 +329,11 @@
         {
             return language == "ar" ? "هذا فئة غير موجودة" : "Category is not Found";
         }
-        //BookingReceived
+        public static string GovernmentExists(string language)
+        {
+            return language == "ar" ? "المحافظة غير موجودة" : "Government not found ";
+        }
+        //GovernmentExists
 
     }
 }

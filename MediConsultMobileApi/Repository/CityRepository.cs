@@ -1,5 +1,6 @@
 ﻿using MediConsultMobileApi.Models;
 using MediConsultMobileApi.Repository.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace MediConsultMobileApi.Repository
 {
@@ -13,9 +14,9 @@ namespace MediConsultMobileApi.Repository
         }
 
 
-        public List<AppSelectorGovernmentCity> GetCity(int? govId)
+        public IQueryable<AppSelectorGovernmentCity> GetCity(int? govId)
         {
-           return dbContext.SelectorGovernmentCities.Where(g=>g.government_id == govId).ToList();
+           return dbContext.SelectorGovernmentCities.Where(g=>g.government_id == govId).OrderBy(c=>c.city_name_en).AsNoTracking().AsQueryable();
         }
     }
 }

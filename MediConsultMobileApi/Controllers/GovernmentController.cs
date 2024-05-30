@@ -19,7 +19,7 @@ namespace MediConsultMobileApi.Controllers
 
         #region GetGovernment
         [HttpGet("GetGovernment")]
-        public IActionResult GetGovernment(string lang)
+        public IActionResult GetGovernment(string? lang)
         {
             if(!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -27,17 +27,25 @@ namespace MediConsultMobileApi.Controllers
             if (lang is null)
                 return NotFound(new MessageDto { Message = "Please enter Language" });
 
+
             var govs = govRepo.GetGovernments();
+            if (lang == "en")
+                govs = govs.OrderBy(g => g.government_name_en);
+            else
+                govs= govs.OrderBy(g=>g.government_name_ar);
+
+
             var resultGov = new List<GovernmentDTO>();
             foreach (var gov in govs)
             {
+
                 var govDto = new GovernmentDTO
                 {
                     government_id = gov.government_id,
                 };
                 if (lang=="en")
                     govDto.government_name = gov.government_name_en;
-
+                
                 else
                     govDto.government_name = gov.government_name_ar;
                 

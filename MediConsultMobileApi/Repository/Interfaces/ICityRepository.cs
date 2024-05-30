@@ -4,6 +4,6 @@ namespace MediConsultMobileApi.Repository.Interfaces
 {
     public interface ICityRepository
     {
-        List<AppSelectorGovernmentCity> GetCity(int? govId);
+        IQueryable<AppSelectorGovernmentCity> GetCity(int? govId);
     }
 }

@@ -1,5 +1,6 @@
 ﻿using MediConsultMobileApi.Models;
 using MediConsultMobileApi.Repository.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace MediConsultMobileApi.Repository
 {
@@ -11,6 +12,8 @@ namespace MediConsultMobileApi.Repository
         {
             this.dbContext = dbContext;
         }
-        public List<AppSelectorGovernment> GetGovernments() => dbContext.AppSelectorGovernments.ToList();
+        public IQueryable<AppSelectorGovernment> GetGovernments() => dbContext.AppSelectorGovernments.AsNoTracking().AsQueryable();
+
+        public bool GovernmentExsists(int governmentId) => dbContext.AppSelectorGovernments.Any(g=> g.government_id==governmentId);
     }
 }

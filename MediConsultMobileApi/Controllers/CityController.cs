@@ -1,8 +1,11 @@
-﻿using MediConsultMobileApi.DTO;
+﻿using FirebaseAdmin.Messaging;
+using MediConsultMobileApi.DTO;
+using MediConsultMobileApi.Language;
 using MediConsultMobileApi.Models;
 using MediConsultMobileApi.Repository.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations;
 
 namespace MediConsultMobileApi.Controllers
 {
@@ -11,15 +14,17 @@ namespace MediConsultMobileApi.Controllers
     public class CityController : ControllerBase
     {
         private readonly ICityRepository cityRepo;
+        private readonly IGovernmentRepository govRepo;
 
-        public CityController(ICityRepository cityRepo)
+        public CityController(ICityRepository cityRepo , IGovernmentRepository govRepo)
         {
             this.cityRepo = cityRepo;
+            this.govRepo = govRepo;
         }
 
         #region GetCity
         [HttpGet("GetCity")]
-        public IActionResult GetCity(string? lang , int? govId)
+        public IActionResult GetCity(string? lang ,[Required] int govId)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -27,11 +32,20 @@ namespace MediConsultMobileApi.Controllers
             if (lang is null)
                 return NotFound(new MessageDto { Message = "Please enter Language" });
 
-            if (govId is null)
+            
+            var govExists = govRepo.GovernmentExsists(govId);
+            if (!govExists)
             {
-                return NotFound(new MessageDto { Message = "Please enter Government Id" });
+                return NotFound(new MessageDto { Message = Messages.GovernmentExists(lang) });
             }
+
+
             var cities = cityRepo.GetCity(govId);
+            if (lang == "en")
+                cities = cities.OrderBy(g => g.city_name_en);
+            else
+                cities = cities.OrderBy(g => g.city_name_ar);
+
 
             var resultCity = new List<CityDTO>();
             foreach (var city in cities)
