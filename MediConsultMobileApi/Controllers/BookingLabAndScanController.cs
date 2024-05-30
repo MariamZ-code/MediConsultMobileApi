@@ -13,15 +13,18 @@ namespace MediConsultMobileApi.Controllers
     {
         private readonly IProviderLocationRepository locationRepo;
         private readonly ICategoryRepository categoryRepo;
+        private readonly ILabAndScanCenterRepository labRepo;
 
-        public BookingLabAndScanController(IProviderLocationRepository locationRepo, ICategoryRepository categoryRepo)
+        public BookingLabAndScanController(IProviderLocationRepository locationRepo, ICategoryRepository categoryRepo, ILabAndScanCenterRepository labRepo)
         {
             this.locationRepo = locationRepo;
             this.categoryRepo = categoryRepo;
+            this.labRepo = labRepo;
         }
+        #region GetProvidersForCategory
 
-        [HttpGet("")]
-        public IActionResult GetProvidersForCategory(string lang,[Required]int categoryId , int startPage = 1, int pageSize = 10)
+        [HttpGet("GetProvidersForCategory")]
+        public IActionResult GetProvidersForCategory(string lang, [Required] int categoryId, int startPage = 1, int pageSize = 10)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -33,13 +36,13 @@ namespace MediConsultMobileApi.Controllers
                 return NotFound(new MessageDto { Message = Messages.CategoryNotFound(lang) });
 
             var providers = locationRepo.GetProviderLocationsLabAndScan(categoryId);
-                var bookingListDto = new List<BookingLabAndScanDTO>();
+            var bookingListDto = new List<BookingLabAndScanDTO>();
 
             foreach (var location in providers)
             {
 
                 var bookingDto = new BookingLabAndScanDTO();
-              
+
 
                 bookingDto.Location_id = location.location_id;
                 bookingDto.Provider_id = location.provider_id;
@@ -75,7 +78,7 @@ namespace MediConsultMobileApi.Controllers
 
 
                 bookingListDto.Add(bookingDto);
-              
+
             }
             var totalBooking = bookingListDto.Count();
 
@@ -92,5 +95,52 @@ namespace MediConsultMobileApi.Controllers
             return Ok(result);
         }
 
+        #endregion
+
+
+        #region SeviceName
+
+        [HttpGet("SeviceName")]
+        public IActionResult SeviceName(string? lang, int startPage = 1, int pageSize = 10)
+        {
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            if (lang is null)
+                return NotFound(new MessageDto { Message = "Please enter Language" });
+
+            var uniqueServices = labRepo.GetLabAndScanUnique();
+
+            var serviceNames = new List<UniqueServiceDto>();
+            //foreach (var service in uniqueServices)
+            //{
+
+            //    var serviceName = new UniqueServiceDto
+            //    {
+            //        Service_id = service.Service_id,
+
+            //    };
+            //    if (lang== "en")
+            //        serviceName.Service_name = service.Service_name_En;
+            //    else
+            //        serviceName.Service_name = service.Service_Name_Ar;
+
+            //    serviceNames.Add(serviceName);
+
+            //}
+            var totalServicename = serviceNames.Count();
+            var result = new
+            {
+                TotalServicename = totalServicename,
+                PageNum = startPage,
+                PageSize = pageSize,
+                Data = uniqueServices
+            };
+            return Ok(result);
+
+
+        }
+        #endregion
     }
 }
