@@ -77,7 +77,7 @@ namespace MediConsultMobileApi.Controllers
                             MedicalNetworkEnDTO medicalNetEnDto = new MedicalNetworkEnDTO
                             {
 
-                                Category = medicalNet.Category_Name_En.Replace("\t", ""),
+                                Category = medicalNet.Category_Name_En,
                                 providerName = medicalNet.provider_name_en,
                                 Latitude = medicalNet.Latitude,
                                 Longitude = medicalNet.Longitude,

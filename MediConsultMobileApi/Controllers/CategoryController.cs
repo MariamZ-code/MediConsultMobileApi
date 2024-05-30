@@ -41,7 +41,7 @@ namespace MediConsultMobileApi.Controllers
                         {
 
                             Category_Id = category.Category_Id,
-                            Category_Name_En = category.Category_Name_En.Replace("\t", ""),
+                            Category_Name_En = category.Category_Name_En,
                             Count = category.ProviderCount
 
                         };
@@ -59,7 +59,7 @@ namespace MediConsultMobileApi.Controllers
                     {
 
                         Category_Id = category.Category_Id,
-                        Category_Name_Ar = category.Category_Name_Ar.Replace("\t", ""),
+                        Category_Name_Ar = category.Category_Name_Ar,
                         Count = category.ProviderCount
 
                     };
