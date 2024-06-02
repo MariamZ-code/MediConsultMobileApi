@@ -64,7 +64,8 @@ namespace MediConsultMobileApi.Models
         public DbSet<WorkTime> workTimes { get; set; }
         public DbSet<ProviderWorktime> ProviderWorktimes { get; set; }
         public DbSet<ProviderRating> ProviderRatings { get; set; }
-        public DbSet<LabAndScanCenter> labAndScanCenters { get; set; }
+        public DbSet<LabAndScanCenter> LabAndScanCenters { get; set; }
+        public DbSet<GetServicesLabAndScan> GetServicesLabAndScans { get; set; }
 
     }
 }

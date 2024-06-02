@@ -13,17 +13,7 @@ namespace MediConsultMobileApi.Repository
         {
             this.dbContext = dbContext;
         }
-        public IQueryable<UniqueLabAndScanServiceDto> GetLabAndScanUnique() => dbContext.labAndScanCenters
-                                .GroupBy(s => new { s.Service_name_En, s.Service_Name_Ar })
-                                .Select(g => g.First())
-                                .Select(s => new UniqueLabAndScanServiceDto
-                                {
-                                    Service_id = s.Service_id,
-                                    Service_name_En = s.Service_name_En,
-                                    Service_Name_Ar = s.Service_Name_Ar,
-                                    Service_price = s.Service_price,
-                                    provider_name_en = s.provider_name_en
-                                })
+        public IQueryable<GetServicesLabAndScan> GetLabAndScanUnique() => dbContext.GetServicesLabAndScans.AsNoTracking()
                                 .AsQueryable();
     }
 }

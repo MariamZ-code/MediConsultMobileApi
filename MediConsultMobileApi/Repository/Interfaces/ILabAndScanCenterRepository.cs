@@ -5,6 +5,6 @@ namespace MediConsultMobileApi.Repository.Interfaces
 {
     public interface ILabAndScanCenterRepository
     {
-        IQueryable<UniqueLabAndScanServiceDto> GetLabAndScanUnique();
+        IQueryable<GetServicesLabAndScan> GetLabAndScanUnique();
     }
 }

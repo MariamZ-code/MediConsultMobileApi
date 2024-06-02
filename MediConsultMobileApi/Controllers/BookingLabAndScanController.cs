@@ -101,7 +101,7 @@ namespace MediConsultMobileApi.Controllers
         #region SeviceName
 
         [HttpGet("SeviceName")]
-        public IActionResult SeviceName(string? lang, int startPage = 1, int pageSize = 10)
+        public IActionResult SeviceName(string? lang, string? serviceNameFilter, int startPage = 1, int pageSize = 10)
         {
 
             if (!ModelState.IsValid)
@@ -112,24 +112,34 @@ namespace MediConsultMobileApi.Controllers
 
             var uniqueServices = labRepo.GetLabAndScanUnique();
 
+            if (serviceNameFilter is not null)
+            {
+                if (lang == "en")
+                    uniqueServices = uniqueServices.Where(p => p.Service_name_En.Contains(serviceNameFilter));
+                else
+                    uniqueServices = uniqueServices.Where(p => p.Service_name_Ar.Contains(serviceNameFilter));
+
+            }
             var serviceNames = new List<UniqueServiceDto>();
-            //foreach (var service in uniqueServices)
-            //{
+            foreach (var service in uniqueServices)
+            {
 
-            //    var serviceName = new UniqueServiceDto
-            //    {
-            //        Service_id = service.Service_id,
+                var serviceName = new UniqueServiceDto
+                {
+                    Service_id = service.service_id,
 
-            //    };
-            //    if (lang== "en")
-            //        serviceName.Service_name = service.Service_name_En;
-            //    else
-            //        serviceName.Service_name = service.Service_Name_Ar;
+                };
+                if (lang == "en")
+                    serviceName.Service_name = service.Service_name_En;
+                else
+                    serviceName.Service_name = service.Service_name_Ar;
 
-            //    serviceNames.Add(serviceName);
+                serviceNames.Add(serviceName);
 
-            //}
-            var totalServicename = serviceNames.Count();
+            }
+            var totalServicename = uniqueServices.Count();
+            uniqueServices = uniqueServices.Skip((startPage - 1) * pageSize).Take(pageSize);
+
             var result = new
             {
                 TotalServicename = totalServicename,
@@ -142,5 +152,7 @@ namespace MediConsultMobileApi.Controllers
 
         }
         #endregion
+
+
     }
 }

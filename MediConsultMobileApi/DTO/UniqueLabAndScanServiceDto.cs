@@ -4,6 +4,7 @@ namespace MediConsultMobileApi.DTO
 {
     public class UniqueLabAndScanServiceDto
     {
+   
         public int Service_id { get; set; }
         public string? Service_name_En { get; set; }
         public string? Service_Name_Ar { get; set; }
