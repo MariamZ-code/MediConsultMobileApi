@@ -333,7 +333,11 @@
         {
             return language == "ar" ? "المحافظة غير موجودة" : "Government not found ";
         }
-        //GovernmentExists
+        public static string EnterServices(string language)
+        {
+            return language == "ar" ? "الرجاء ادخال الخدمة" : "Please enter Service id ";
+        }
+        
 
     }
 }

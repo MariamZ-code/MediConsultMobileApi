@@ -156,7 +156,7 @@ namespace MediConsultMobileApi.Controllers
 
         #region GetLabAndScanBySeviceId
         [HttpGet("GetLabAndScanBySeviceId")]
-        public IActionResult GetLabAndScanBySeviceId(string? lang,[FromQuery] List<int>? serviceIds, int startPage = 1, int pageSize = 10)
+        public IActionResult GetLabAndScanBySeviceId(string? lang, [FromQuery] List<int>? serviceIds, int startPage = 1, int pageSize = 10)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -165,34 +165,43 @@ namespace MediConsultMobileApi.Controllers
                 return NotFound(new MessageDto { Message = "Please enter Language" });
 
             if (serviceIds.Count == 0)
-                return NotFound(new MessageDto { Message = "Please enter Service id" });
+                return NotFound(new MessageDto { Message = Messages.EnterServices(lang) });
 
             var labAndScans = labRepo.GetLabAndScanCenters(serviceIds);
 
-            var labAndScanListDto = new List<LabAndScanCentersDTO>();
+            //var labAndScanListDto = new List<LabAndScanCentersDTO>();
+
+
+            var labAndScanDtoDictionary = new Dictionary<int, LabAndScanCentersDTO>();
 
             foreach (var labAndScan in labAndScans)
             {
-                var labAndScanDto = new LabAndScanCentersDTO
+                if (!labAndScanDtoDictionary.TryGetValue(labAndScan.provider_id, out var labAndScanDto))
+                {
+                    labAndScanDto = new LabAndScanCentersDTO()
+                    {
+                        provider_id = labAndScan.provider_id,
+                        provider_name = lang == "en" ? labAndScan.provider_name_en : labAndScan.provider_name_ar,
+                        serviceData = new List<ServicesDetailsDTO>(),
+                        TotalServicePrice = 0  
+                    };
+                    labAndScanDtoDictionary[labAndScan.provider_id] = labAndScanDto;
+                }
+
+                var serviceDetail = new ServicesDetailsDTO
                 {
                     Service_id = labAndScan.Service_id,
                     Service_price = labAndScan.Service_price,
+                    Service_name = lang == "en" ? labAndScan.Service_name_En : labAndScan.Service_Name_Ar,
                 };
 
-                if (lang is "en")
-                {
-                    labAndScanDto.Service_name = labAndScan.Service_name_En;
-                    labAndScanDto.provider_name = labAndScan.provider_name_en;
-
-                }
-                else
-                {
-                    labAndScanDto.Service_name = labAndScan.Service_Name_Ar;
-                    labAndScanDto.provider_name = labAndScan.provider_name_ar;
-                }
-                labAndScanListDto.Add(labAndScanDto);
-
+                labAndScanDto.serviceData.Add(serviceDetail);
+                labAndScanDto.TotalServicePrice += labAndScan.Service_price;  
             }
+
+            var labAndScanListDto = labAndScanDtoDictionary.Values.ToList();
+
+
             var totalLabAndScanResult = labAndScanListDto.Count();
             var labAndScanResult = new
             {
