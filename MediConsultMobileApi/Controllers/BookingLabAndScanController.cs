@@ -1,5 +1,6 @@
 ﻿using MediConsultMobileApi.DTO;
 using MediConsultMobileApi.Language;
+using MediConsultMobileApi.Models;
 using MediConsultMobileApi.Repository.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -152,6 +153,61 @@ namespace MediConsultMobileApi.Controllers
 
         }
         #endregion
+
+        #region GetLabAndScanBySeviceId
+        [HttpGet("GetLabAndScanBySeviceId")]
+        public IActionResult GetLabAndScanBySeviceId(string? lang,[FromQuery] List<int>? serviceIds, int startPage = 1, int pageSize = 10)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            if (lang is null)
+                return NotFound(new MessageDto { Message = "Please enter Language" });
+
+            if (serviceIds.Count == 0)
+                return NotFound(new MessageDto { Message = "Please enter Service id" });
+
+            var labAndScans = labRepo.GetLabAndScanCenters(serviceIds);
+
+            var labAndScanListDto = new List<LabAndScanCentersDTO>();
+
+            foreach (var labAndScan in labAndScans)
+            {
+                var labAndScanDto = new LabAndScanCentersDTO
+                {
+                    Service_id = labAndScan.Service_id,
+                    Service_price = labAndScan.Service_price,
+                };
+
+                if (lang is "en")
+                {
+                    labAndScanDto.Service_name = labAndScan.Service_name_En;
+                    labAndScanDto.provider_name = labAndScan.provider_name_en;
+
+                }
+                else
+                {
+                    labAndScanDto.Service_name = labAndScan.Service_Name_Ar;
+                    labAndScanDto.provider_name = labAndScan.provider_name_ar;
+                }
+                labAndScanListDto.Add(labAndScanDto);
+
+            }
+            var totalLabAndScanResult = labAndScanListDto.Count();
+            var labAndScanResult = new
+            {
+                totalLabAndScan = totalLabAndScanResult,
+                PageNum = startPage,
+                PageSize = pageSize,
+                Data = labAndScanListDto
+            };
+            return Ok(labAndScanResult);
+
+        }
+
+
+        #endregion
+
 
 
     }
