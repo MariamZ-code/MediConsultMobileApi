@@ -16,7 +16,7 @@ namespace MediConsultMobileApi.Repository
         public IQueryable<GetServicesLabAndScan> GetLabAndScanUnique() => dbContext.GetServicesLabAndScans.AsNoTracking()
                                 .AsQueryable();
 
-        public IQueryable<LabAndScanCenter> GetLabAndScanCenters(List<int> serviceIds)=> dbContext.LabAndScanCenters
+        public IQueryable<LabAndScanCenter> GetLabAndScanCenters(List<int> serviceIds) => dbContext.LabAndScanCenters
                 .Where(l => serviceIds.Contains(l.Service_id))
                 .GroupBy(l => new
                 {
@@ -30,16 +30,19 @@ namespace MediConsultMobileApi.Repository
                 })
                 .Select(g => new LabAndScanCenter
                 {
-                   Service_id= g.Key.Service_id,
+                    Service_id = g.Key.Service_id,
                     Service_name_En = g.Key.Service_name_En,
                     Service_Name_Ar = g.Key.Service_Name_Ar,
                     provider_name_en = g.Key.provider_name_en,
                     provider_name_ar = g.Key.provider_name_ar,
-                    Service_price= g.Key.Service_price,
-                    provider_id= g.Key.provider_id,
+                    Service_price = g.Key.Service_price,
+                    provider_id = g.Key.provider_id,
                 })
                 .OrderBy(g => g.Service_price)
-                
+
                 .AsQueryable();
+
+
+        public LabAndScanCenter GetLabAndScanServiceName(int serviceId) => dbContext.LabAndScanCenters.FirstOrDefault(s => s.Service_id == serviceId);
     }
 }

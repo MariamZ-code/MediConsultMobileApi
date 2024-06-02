@@ -8,5 +8,6 @@ namespace MediConsultMobileApi.Repository.Interfaces
         IQueryable<GetServicesLabAndScan> GetLabAndScanUnique();
 
         IQueryable<LabAndScanCenter> GetLabAndScanCenters(List<int> serviceIds);
+        LabAndScanCenter GetLabAndScanServiceName(int serviceId);
     }
 }
