@@ -169,10 +169,9 @@ namespace MediConsultMobileApi.Controllers
 
             var labAndScans = labRepo.GetLabAndScanCenters(serviceIds);
 
-            //var labAndScanListDto = new List<LabAndScanCentersDTO>();
-
 
             var labAndScanDtoDictionary = new Dictionary<int, LabAndScanCentersDTO>();
+          
 
             foreach (var labAndScan in labAndScans)
             {
@@ -180,10 +179,11 @@ namespace MediConsultMobileApi.Controllers
                 {
                     labAndScanDto = new LabAndScanCentersDTO()
                     {
-                        provider_id = labAndScan.provider_id,
-                        provider_name = lang == "en" ? labAndScan.provider_name_en : labAndScan.provider_name_ar,
-                        serviceData = new List<ServicesDetailsDTO>(),
-                        TotalServicePrice = 0  
+                        ProviderId = labAndScan.provider_id,
+                        ProviderName = lang == "en" ? labAndScan.provider_name_en : labAndScan.provider_name_ar,
+                        ServiceData = new List<ServicesDetailsDTO>(),
+                        TotalServicePrice = 0,
+                        ServiceIdNotInList = new List<string>()
                     };
                     labAndScanDtoDictionary[labAndScan.provider_id] = labAndScanDto;
                 }
@@ -195,10 +195,23 @@ namespace MediConsultMobileApi.Controllers
                     Service_name = lang == "en" ? labAndScan.Service_name_En : labAndScan.Service_Name_Ar,
                 };
 
-                labAndScanDto.serviceData.Add(serviceDetail);
-                labAndScanDto.TotalServicePrice += labAndScan.Service_price;  
+                labAndScanDto.ServiceData.Add(serviceDetail);
+               
+                labAndScanDto.TotalServicePrice += Convert.ToDecimal(labAndScan.Service_price);
             }
-
+           
+            foreach (var labAndScanDto in labAndScanDtoDictionary.Values)
+            {
+                foreach (var serviceId in serviceIds)
+                {
+                    if (labAndScanDto.ServiceData.All(sd => sd.Service_id != serviceId))
+                    {
+                      
+                            labAndScanDto.ServiceIdNotInList.Add($"Not Found {serviceId}");
+                        
+                    }
+                }
+            }
             var labAndScanListDto = labAndScanDtoDictionary.Values.ToList();
 
 
