@@ -206,8 +206,10 @@ namespace MediConsultMobileApi.Controllers
                 {
                     if (labAndScanDto.ServiceData.All(sd => sd.Service_id != serviceId))
                     {
-                       var servicename = lang == "en" ? labRepo.GetLabAndScanServiceName(serviceId).Service_name_En : labRepo.GetLabAndScanServiceName(serviceId).Service_Name_Ar;
-                        labAndScanDto.ServiceIdNotInList.Add($"Not Found {servicename}");
+                        var service = labRepo.GetLabAndScanServiceName(serviceId);
+                       var servicename = lang == "en" ? service.Service_name_En : service.Service_Name_Ar;
+                        var serviceNotExists = lang == "en" ? $"{servicename} not found" : $"{servicename} غير موجودة";
+                         labAndScanDto.ServiceIdNotInList.Add(serviceNotExists);
                         
                     }
                 }
