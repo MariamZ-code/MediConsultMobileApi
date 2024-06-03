@@ -337,7 +337,10 @@
         {
             return language == "ar" ? "الرجاء ادخال الخدمة" : "Please enter Service id ";
         }
-        
+        public static string ServicesNotFound(string language)
+        {
+            return language == "ar" ? "احد الخدمات غير موجودة" : "Service not found ";
+        }
 
     }
 }

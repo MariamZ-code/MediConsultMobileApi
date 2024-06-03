@@ -9,5 +9,9 @@ namespace MediConsultMobileApi.Repository.Interfaces
 
         IQueryable<LabAndScanCenter> GetLabAndScanCenters(List<int> serviceIds);
         LabAndScanCenter GetLabAndScanServiceName(int serviceId);
+
+        void AddBooking(BookingLabAndScan booking);
+        void EditBooking(BookingLabAndScanCenterDTO bookingLab, int bookingId);
+        void Save();
     }
 }

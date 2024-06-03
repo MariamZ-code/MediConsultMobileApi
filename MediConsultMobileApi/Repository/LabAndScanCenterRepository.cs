@@ -2,6 +2,7 @@
 using MediConsultMobileApi.Models;
 using MediConsultMobileApi.Repository.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace MediConsultMobileApi.Repository
 {
@@ -14,7 +15,7 @@ namespace MediConsultMobileApi.Repository
             this.dbContext = dbContext;
         }
         public IQueryable<GetServicesLabAndScan> GetLabAndScanUnique(int categoryId) => dbContext.GetServicesLabAndScans
-                                .Where(c=>c.Category_ID == categoryId)
+                                .Where(c => c.Category_ID == categoryId)
                                 .AsNoTracking()
                                 .AsQueryable();
 
@@ -41,10 +42,44 @@ namespace MediConsultMobileApi.Repository
                     provider_id = g.Key.provider_id,
                 })
                 .OrderBy(g => g.Service_price)
-
                 .AsQueryable();
 
 
         public LabAndScanCenter GetLabAndScanServiceName(int serviceId) => dbContext.LabAndScanCenters.FirstOrDefault(s => s.Service_id == serviceId);
+
+        public void AddBooking(BookingLabAndScan booking)
+        {
+
+            dbContext.BookingLabAndScans.Add(booking);
+        }
+
+
+        public void AddBookingService(BookingService service) => dbContext.BookingServices.Add(service);
+        public void Save() => dbContext.SaveChanges();
+
+        public void EditBooking(BookingLabAndScanCenterDTO bookingLab, int bookingId)
+        {
+            var oldBooking = dbContext.BookingLabAndScans
+                       .Include(b => b.service)
+                       .ThenInclude(bs => bs.ServiceData)
+                       .FirstOrDefault(b => b.id == bookingId);
+            var oldBookingService = dbContext.BookingServices.Where(b=>b.BookingLabAndScanId== bookingId).ToList();
+
+            
+
+            //foreach (var serviceId in oldBookingService)
+            //{
+               
+            //       serviceId.ServiceDataId= bookingLab.serviceIds
+                
+
+            //    serviceIds.Add(service);
+            //}
+
+            oldBooking.member_id = bookingLab.member_id;
+            oldBooking.provider_id = bookingLab.provider_id;
+            oldBooking.service = bookingLab.serviceIds;
+            
+        }
     }
 }
