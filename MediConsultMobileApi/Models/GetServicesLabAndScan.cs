@@ -8,6 +8,7 @@ namespace MediConsultMobileApi.Models
     public class GetServicesLabAndScan
     {
         public int service_id { get; set; }
+        public int Category_ID { get; set; }
         public string Service_name_En { get; set; }
         public string Service_name_Ar { get; set; }
     }

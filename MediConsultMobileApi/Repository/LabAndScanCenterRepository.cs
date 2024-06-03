@@ -13,7 +13,9 @@ namespace MediConsultMobileApi.Repository
         {
             this.dbContext = dbContext;
         }
-        public IQueryable<GetServicesLabAndScan> GetLabAndScanUnique() => dbContext.GetServicesLabAndScans.AsNoTracking()
+        public IQueryable<GetServicesLabAndScan> GetLabAndScanUnique(int categoryId) => dbContext.GetServicesLabAndScans
+                                .Where(c=>c.Category_ID == categoryId)
+                                .AsNoTracking()
                                 .AsQueryable();
 
         public IQueryable<LabAndScanCenter> GetLabAndScanCenters(List<int> serviceIds) => dbContext.LabAndScanCenters

@@ -102,7 +102,7 @@ namespace MediConsultMobileApi.Controllers
         #region SeviceName
 
         [HttpGet("SeviceName")]
-        public IActionResult SeviceName(string? lang, string? serviceNameFilter, int startPage = 1, int pageSize = 10)
+        public IActionResult SeviceName(string? lang,[Required]int categoryId, string? serviceNameFilter, int startPage = 1, int pageSize = 10)
         {
 
             if (!ModelState.IsValid)
@@ -111,7 +111,7 @@ namespace MediConsultMobileApi.Controllers
             if (lang is null)
                 return NotFound(new MessageDto { Message = "Please enter Language" });
 
-            var uniqueServices = labRepo.GetLabAndScanUnique();
+            var uniqueServices = labRepo.GetLabAndScanUnique(categoryId);
 
             if (serviceNameFilter is not null)
             {
@@ -122,6 +122,7 @@ namespace MediConsultMobileApi.Controllers
 
             }
             var serviceNames = new List<UniqueServiceDto>();
+
             foreach (var service in uniqueServices)
             {
 
@@ -138,15 +139,15 @@ namespace MediConsultMobileApi.Controllers
                 serviceNames.Add(serviceName);
 
             }
-            var totalServicename = uniqueServices.Count();
-            uniqueServices = uniqueServices.Skip((startPage - 1) * pageSize).Take(pageSize);
+            var totalServicename = serviceNames.Count();
+            uniqueServices =  uniqueServices.Skip((startPage - 1) * pageSize).Take(pageSize);
 
             var result = new
             {
                 TotalServicename = totalServicename,
                 PageNum = startPage,
                 PageSize = pageSize,
-                Data = uniqueServices
+                Data = serviceNames
             };
             return Ok(result);
 
