@@ -12,6 +12,8 @@ namespace MediConsultMobileApi.Repository.Interfaces
 
         void AddBooking(BookingLabAndScan booking);
         void EditBooking(BookingLabAndScanCenterDTO bookingLab, int bookingId);
+
+        bool BookingExist(int bookingId);
         void Save();
     }
 }

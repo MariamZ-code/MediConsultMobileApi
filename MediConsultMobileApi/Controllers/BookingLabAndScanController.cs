@@ -334,21 +334,24 @@ namespace MediConsultMobileApi.Controllers
 
         #region EditBooking
         [HttpPost("EditBooking")]
-        public async Task<IActionResult> EditBooking(string? lang,int bookingId ,BookingLabAndScanCenterDTO bookingLab)
+        public async Task<IActionResult> EditBooking(string? lang,[Required]int bookingId ,BookingLabAndScanCenterDTO bookingLab)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
             if (lang is null)
                 return NotFound(new MessageDto { Message = "Please enter Language" });
+            var bookingExist = labRepo.BookingExist(bookingId);
             var providerExists = await providerRepo.ProviderExistsAsync(bookingLab.provider_id);
             var memberExists = memberRepo.MemberExists(bookingLab.member_id);
+            if(!bookingExist)
+                return NotFound(new MessageDto { Message = Messages.BookingNotFound(lang) });
 
             if (bookingLab.provider_id is not null)
             {
                 if (!providerExists)
                 {
-                    return BadRequest(new MessageDto { Message = Messages.ProviderNotFound(lang) });
+                    return NotFound(new MessageDto { Message = Messages.ProviderNotFound(lang) });
                 }
             }
 
@@ -356,7 +359,7 @@ namespace MediConsultMobileApi.Controllers
             {
                 if (!memberExists)
                 {
-                    return BadRequest(new MessageDto { Message = Messages.MemberNotFound(lang) });
+                    return NotFound(new MessageDto { Message = Messages.MemberNotFound(lang) });
 
                 }
             }
@@ -368,7 +371,7 @@ namespace MediConsultMobileApi.Controllers
                     var serviceExist = serviceRepo.ServiceExists(serviceId);
                     if (!serviceExist)
                     {
-                        return BadRequest(new MessageDto { Message = Messages.ServicesNotFound(lang) });
+                        return NotFound(new MessageDto { Message = Messages.ServicesNotFound(lang) });
 
                     }
                 }

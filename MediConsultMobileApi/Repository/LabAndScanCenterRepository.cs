@@ -65,21 +65,25 @@ namespace MediConsultMobileApi.Repository
                        .FirstOrDefault(b => b.id == bookingId);
             var oldBookingService = dbContext.BookingServices.Where(b=>b.BookingLabAndScanId== bookingId).ToList();
 
-            
+            var serviceIds = new List<BookingService>();
 
-            //foreach (var serviceId in oldBookingService)
-            //{
-               
-            //       serviceId.ServiceDataId= bookingLab.serviceIds
-                
+            foreach (var serviceId in oldBookingService)
+            {
+                var service = new BookingService
+                {
+                    ServiceDataId = serviceId.ServiceDataId
+                };
 
-            //    serviceIds.Add(service);
-            //}
+                serviceIds.Add(service);
+            }
 
             oldBooking.member_id = bookingLab.member_id;
             oldBooking.provider_id = bookingLab.provider_id;
-            oldBooking.service = bookingLab.serviceIds;
+            oldBooking.service = serviceIds;
             
         }
+
+        public bool BookingExist(int bookingId)
+       => dbContext.BookingLabAndScans.Any(b=> b.id == bookingId);
     }
 }
