@@ -24,7 +24,7 @@ namespace MediConsultMobileApi.Controllers
         }
         [HttpGet]
 
-        public IActionResult MedicalNetwork([FromQuery] string? providerName, string lang, [FromQuery] string[]? categories, [FromQuery] string? gov, [FromQuery] string? city, int StartPage = 1, int pageSize = 10)
+        public IActionResult MedicalNetwork([FromQuery]FilterMedicalNetworkDTO filterMedi, string lang,  int StartPage = 1, int pageSize = 10)
         {
 
             if (ModelState.IsValid)
@@ -35,25 +35,25 @@ namespace MediConsultMobileApi.Controllers
 
                 if (lang == "en")
                 {
-                    if (providerName is not null)
+                    if (filterMedi.providerName is not null)
                     {
-                        medicalNets = medicalNets.Where(x => x.provider_name_en.Contains(providerName));
+                        medicalNets = medicalNets.Where(x => x.provider_name_en.Contains(filterMedi.providerName));
                     }
-                    if (gov is not null)
+                    if (filterMedi.gov is not null)
                     {
-                        medicalNets = medicalNets.Where(x => x.government_name_en.Contains(gov));
+                        medicalNets = medicalNets.Where(x => x.government_name_en.Contains(filterMedi.gov));
                     }
-                    if (city is not null)
+                    if (filterMedi.city is not null)
                     {
-                        medicalNets = medicalNets.Where(x => x.city_name_en.Contains(city));
+                        medicalNets = medicalNets.Where(x => x.city_name_en.Contains(filterMedi.city));
                     }
-                    if (categories != null && categories.Any())
+                    if (filterMedi.categories != null && filterMedi.categories.Any())
                     {
-                        for (int i = 0; i < categories.Length; i++)
+                        for (int i = 0; i < filterMedi.categories.Length; i++)
                         {
-                            var status = categories[i];
+                            var status = filterMedi.categories[i];
                         }
-                        medicalNets = medicalNets.Where(c => categories.Contains(c.Category_Name_En));
+                        medicalNets = medicalNets.Where(c => filterMedi.categories.Contains(c.Category_Name_En));
                     }
 
                     var totalCount = medicalNets.Count();
@@ -121,25 +121,25 @@ namespace MediConsultMobileApi.Controllers
                 }
 
 
-                if (providerName is not null)
+                if (filterMedi.providerName is not null)
                 {
-                    medicalNets = medicalNets.Where(x => x.provider_name.Contains(providerName));
+                    medicalNets = medicalNets.Where(x => x.provider_name.Contains(filterMedi.providerName));
                 }
-                if (gov is not null)
+                if (filterMedi.gov is not null)
                 {
-                    medicalNets = medicalNets.Where(x => x.government_name_ar.Contains(gov));
+                    medicalNets = medicalNets.Where(x => x.government_name_ar.Contains(filterMedi.gov));
                 }
-                if (city is not null)
+                if (filterMedi.city is not null)
                 {
-                    medicalNets = medicalNets.Where(x => x.city_name_ar.Contains(city));
+                    medicalNets = medicalNets.Where(x => x.city_name_ar.Contains(filterMedi.city));
                 }
-                if (categories != null && categories.Any())
+                if (filterMedi.categories != null && filterMedi.categories.Any())
                 {
-                    for (int i = 0; i < categories.Length; i++)
+                    for (int i = 0; i < filterMedi.categories.Length; i++)
                     {
-                        var cat = categories[i];
+                        var cat = filterMedi.categories[i];
                     }
-                    medicalNets = medicalNets.Where(c => categories.Contains(c.Category));
+                    medicalNets = medicalNets.Where(c => filterMedi.categories.Contains(c.Category));
                 }
 
 

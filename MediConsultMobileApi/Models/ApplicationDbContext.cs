@@ -16,6 +16,19 @@ namespace MediConsultMobileApi.Models
                .WithMany(s => s.ChildServices)
                .HasForeignKey(s => s.Service_Class_Parent_Id);
             base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<BookingService>()
+        .HasKey(bs => new { bs.BookingLabAndScanId, bs.ServiceDataId });
+
+            modelBuilder.Entity<BookingService>()
+                .HasOne(bs => bs.BookingLabAndScan)
+                .WithMany(b => b.service)
+                .HasForeignKey(bs => bs.BookingLabAndScanId);
+
+            modelBuilder.Entity<BookingService>()
+                .HasOne(bs => bs.ServiceData)
+                .WithMany(s => s.BookingServices)
+                .HasForeignKey(bs => bs.ServiceDataId);
         }
 
 
@@ -64,6 +77,13 @@ namespace MediConsultMobileApi.Models
         public DbSet<WorkTime> workTimes { get; set; }
         public DbSet<ProviderWorktime> ProviderWorktimes { get; set; }
         public DbSet<ProviderRating> ProviderRatings { get; set; }
+        public DbSet<LabAndScanCenter> LabAndScanCenters { get; set; }
+        public DbSet<GetServicesLabAndScan> GetServicesLabAndScans { get; set; }
+        public DbSet<BookingLabAndScan> BookingLabAndScans { get; set; }
+        public DbSet<BookingService> BookingServices { get; set; }
+        public DbSet<ServiceData> ServiceDatas { get; set; }
+
+
 
     }
 }

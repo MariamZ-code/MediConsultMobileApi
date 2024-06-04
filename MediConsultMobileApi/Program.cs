@@ -51,6 +51,10 @@ builder.Services.AddScoped<IYodawyMedicinsRepository, YodawyMedicinsRepository>(
 builder.Services.AddScoped<IMemberProgramRepository, MemberProgramRepository>();
 builder.Services.AddScoped<IApprovalTimelineRepository, ApprovalTimelineRepository>();
 builder.Services.AddScoped<IProviderRatingRepository, ProviderRatingRepository>();
+builder.Services.AddScoped<IGovernmentRepository, GovernmentRepository>();
+builder.Services.AddScoped<ICityRepository, CityRepository>();
+builder.Services.AddScoped<ILabAndScanCenterRepository, LabAndScanCenterRepository>();
+builder.Services.AddScoped<IServiceDataRepository, ServiceDataRepository>();
 
 builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("cs2")));
 

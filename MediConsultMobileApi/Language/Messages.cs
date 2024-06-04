@@ -329,19 +329,18 @@
         {
             return language == "ar" ? "هذا فئة غير موجودة" : "Category is not Found";
         }
-        public static string RateNotExists(string language)
+        public static string GovernmentExists(string language)
         {
-            return language == "ar" ? "هذا التقييم غير موجود" : "Rating not found";
+            return language == "ar" ? "المحافظة غير موجودة" : "Government not found ";
         }
-        public static string EnterRate(string language)
+        public static string EnterServices(string language)
         {
-            return language == "ar" ? "برجاء ادخال التقييم" : "Please Enter Rate";
+            return language == "ar" ? "الرجاء ادخال الخدمة" : "Please enter Service id ";
         }
-        public static string AddrRate(string language)
+        public static string ServicesNotFound(string language)
         {
-            return language == "ar" ? "تم التقييم بنجاح" : "Successfly";
+            return language == "ar" ? "احد الخدمات غير موجودة" : "Service not found ";
         }
-        //RateNotExists
 
     }
 }
