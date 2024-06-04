@@ -41,6 +41,7 @@ namespace MediConsultMobileApi.Controllers
             return Ok(rate);
 
         }
+        #endregion
 
         #region GetRateById
 
@@ -59,6 +60,7 @@ namespace MediConsultMobileApi.Controllers
 
         }
         #endregion
+
         #region AddRating
         [HttpPost("AddRating")]
         public async Task<IActionResult> AddRating(string lang, [FromForm] AddRatingDto rateDto)
@@ -97,7 +99,7 @@ namespace MediConsultMobileApi.Controllers
             ratingRepo.AddRate(rate);
             ratingRepo.Save();
 
-            return Ok(new MessageDto { Message = Messages.AddrRate(lang) });
+            return Ok(new MessageDto { Message = Messages.AddRating(lang) });
 
 
         }

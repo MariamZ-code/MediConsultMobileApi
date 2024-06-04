@@ -7,7 +7,7 @@
         {
             return language == "ar" ? "المستخدم غير موجود" : "Member not found";
         }
-      
+
         public static string MemberArchive(string language)
         {
             return language == "ar" ? "الحساب معطل" : "User in Archive";
@@ -88,7 +88,7 @@
         }
 
         // Photo Validation 
-        public static string NoFileUploaded (string language)
+        public static string NoFileUploaded(string language)
         {
             return language == "ar" ? "يرجي إدخال الملفات" : "Please Enter attachments";
         }
@@ -126,12 +126,12 @@
         {
             return language == "ar" ? "كلمة المرور يجب ان تكون اكثر من 8 حروف او ارقام " : "Please Password  must be more than 8 charactar ";
         }
-        
+
         public static string PasswordAndIdRequired(string language)
         {
             return language == "ar" ? "يرجي إدخال (رقم التعريف/الرقم القومي) و كلمة المرور" : "Please Id/NationalId and Password is required";
         }
-        public static string InvalidId (string language)
+        public static string InvalidId(string language)
         {
             return language == "ar" ? "رقم التعريف غير صالحة" : "Invalid Id";
         }
@@ -228,7 +228,7 @@
         {
             return language == "ar" ? ".نعنذر الطلب في مرحلة المراجعة" : "Sorry Request in the review stage";
         }
-         public static string Updated(string language)
+        public static string Updated(string language)
         {
             return language == "ar" ? " تم التعديل  " : "Uploaded";
         }
@@ -261,7 +261,7 @@
         {
             return language == "ar" ? "يرجي إدخال تاريخ الاسترداد" : "Please Enter Refund Date";
         }
-        public static string RefundDateIncorrect(string language , string name)
+        public static string RefundDateIncorrect(string language, string name)
         {
             return language == "ar" ? $"عزيزي ( {name} ) طبقاً لبنود التعاقد مع شركتكم الموقرة فإنه لا يتم الاسترداد النقدي بعد مرور 60 يوم من تاريخ تأدية الخدمة الطبية" : $"Dear {name}, according to the terms of the contract with your esteemed company, cash refunds will not be made after 60 days from the date of performing the medical service.";
         }
@@ -342,5 +342,18 @@
             return language == "ar" ? "احد الخدمات غير موجودة" : "Service not found ";
         }
 
+        public static string EnterRate(string language)
+        {
+            return language == "ar" ? "الرجاء ادخال التقييم" : "Please enter your rating ";
+        }
+        public static string RateNotExists(string language)
+        {
+            return language == "ar" ? "التقييم غير موجود" : "rating not found ";
+        }
+
+        public static string AddRating(string language)
+        {
+            return language == "ar" ? "تم إضافة تقييمك" : "Your rating has been added ";
+        }
     }
 }
