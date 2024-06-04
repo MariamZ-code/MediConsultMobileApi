@@ -22,14 +22,16 @@ namespace MediConsultMobileApi.Controllers
         private readonly IBookingRepository bookingRepo;
         private readonly IProviderDataRepository providerRepo;
         private readonly IMemberRepository memberRepo;
+        private readonly IProviderRatingRepository ratingRepo;
 
-        public BookingController(IProviderLocationRepository locationReppo, IProviderSpecialtyRepository specialRepo, IBookingRepository bookingRepo, IProviderDataRepository providerRepo, IMemberRepository memberRepo)
+        public BookingController(IProviderLocationRepository locationReppo, IProviderSpecialtyRepository specialRepo, IBookingRepository bookingRepo, IProviderDataRepository providerRepo, IMemberRepository memberRepo , IProviderRatingRepository ratingRepo)
         {
             this.locationReppo = locationReppo;
             this.specialRepo = specialRepo;
             this.bookingRepo = bookingRepo;
             this.providerRepo = providerRepo;
             this.memberRepo = memberRepo;
+            this.ratingRepo = ratingRepo;
         }
 
         #region GetBooking
@@ -44,7 +46,7 @@ namespace MediConsultMobileApi.Controllers
                 var locations = locationReppo.GetProviderLocations();
                 var specialists = specialRepo.GetProviderSpecialties();
                 var totalProviderCount = specialRepo.GetCountOfProviders().Count();
-                
+
                 if (lang == "en")
                 {
                     if (bookingFilter.cityName is not null)
@@ -110,7 +112,7 @@ namespace MediConsultMobileApi.Controllers
                     var totalProvidersSpecialty = 0;
                     foreach (var specialist in convertSpecialists)
                     {
-                       //totalProvidersSpecialty = specialRepo.GetProvidersSpecialtiesByProviderId(specialist.Specialty_Id).Count();
+                        //totalProvidersSpecialty = specialRepo.GetProvidersSpecialtiesByProviderId(specialist.Specialty_Id).Count();
                         if (location.provider_id == specialist.provider_id)
                         {
                             if (lang == "en")
@@ -131,9 +133,9 @@ namespace MediConsultMobileApi.Controllers
                     bookingDto.Location_id = location.location_id;
                     bookingDto.Provider_id = location.provider_id;
                     bookingDto.Telephone_1 = location.location_telephone_1;
-                    bookingDto.Telephone_2= location.location_telephone_2;
-                    bookingDto.Mobile_1= location.location_mobile_1;
-                    bookingDto.Mobile_2= location.location_mobile_2;
+                    bookingDto.Telephone_2 = location.location_telephone_2;
+                    bookingDto.Mobile_1 = location.location_mobile_1;
+                    bookingDto.Mobile_2 = location.location_mobile_2;
                     bookingDto.HotLine = location.hotline;
                     bookingDto.Status = location.Provider.provider_status;
                     //bookingDto.TotalProviders = totalProvidersSpecialty;
@@ -162,7 +164,7 @@ namespace MediConsultMobileApi.Controllers
 
                     }
 
-                    
+
                     bookingListDto.Add(bookingDto);
                     //}
                 }
@@ -728,5 +730,6 @@ namespace MediConsultMobileApi.Controllers
 
         }
         #endregion
+
     }
 }

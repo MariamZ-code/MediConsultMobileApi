@@ -329,7 +329,19 @@
         {
             return language == "ar" ? "هذا فئة غير موجودة" : "Category is not Found";
         }
-        //BookingReceived
+        public static string RateNotExists(string language)
+        {
+            return language == "ar" ? "هذا التقييم غير موجود" : "Rating not found";
+        }
+        public static string EnterRate(string language)
+        {
+            return language == "ar" ? "برجاء ادخال التقييم" : "Please Enter Rate";
+        }
+        public static string AddrRate(string language)
+        {
+            return language == "ar" ? "تم التقييم بنجاح" : "Successfly";
+        }
+        //RateNotExists
 
     }
 }
