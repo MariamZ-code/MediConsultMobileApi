@@ -28,7 +28,7 @@ namespace MediConsultMobileApi.Controllers
         private readonly IYodawyMedicinsRepository medRepo;
         private readonly IRequestRepository requestRepo;
 
-        public ApprovalChronicController(IApprovalRepository approvalRepo, IPharmaApprovalRepository pharmaRepo, IMemberRepository memberRepo, IApprovalLogRepository approvalLogRepo, IAuthRepository authRepo, IMemberProgramRepository programRepo, IApprovalTimelineRepository appTimelineRepo, IYodawyMedicinsRepository medRepo , IRequestRepository requestRepo)
+        public ApprovalChronicController(IApprovalRepository approvalRepo, IPharmaApprovalRepository pharmaRepo, IMemberRepository memberRepo, IApprovalLogRepository approvalLogRepo, IAuthRepository authRepo, IMemberProgramRepository programRepo, IApprovalTimelineRepository appTimelineRepo, IYodawyMedicinsRepository medRepo, IRequestRepository requestRepo)
         {
             this.approvalRepo = approvalRepo;
             this.pharmaRepo = pharmaRepo;
@@ -205,7 +205,7 @@ namespace MediConsultMobileApi.Controllers
 
         #region InsertApprovalChronic
         [HttpPost("InsertChronicApproval")]
-        public async Task<IActionResult> InsertChronic([Required]int memberId,[FromForm] AddChronicApprovalDto approvalDto, [Required] string lang)
+        public async Task<IActionResult> InsertChronic([Required] int memberId, [FromForm] AddChronicApprovalDto approvalDto, [Required] string lang)
         {
 
             if (!ModelState.IsValid)
@@ -228,18 +228,111 @@ namespace MediConsultMobileApi.Controllers
 
             if (approvalDto.act_id.ToString() is null)
                 return BadRequest(new MessageDto { Message = "Enter Med " });
-            var medExists =await medRepo.MedicinsExists(approvalDto.act_id);
+            var medExists = await medRepo.MedicinsExists(approvalDto.act_id);
 
-            if(!medExists)
-                return BadRequest(new MessageDto { Message = "Med not found"});
+            if (!medExists)
+                return BadRequest(new MessageDto { Message = "Med not found" });
 
             var med = await medRepo.GetById(approvalDto.act_id);
 
             if (med.unit2_name != approvalDto.unit_name)
-                return BadRequest(new MessageDto { Message = "That not unit for this med" });
+                return BadRequest(new MessageDto { Message = "This unit  is not  for this med" });
 
 
-            
+
+
+
+            #region ApprovalData
+
+            var member = authRepo.GetById(memberId);
+            var policy = programRepo.GetMemberbyMemberId(memberId);
+            var chronicApp = new Approval
+            {
+                approval_date = DateTime.Now.ToString("dd-MM-yyyy"),
+                approval_status = "Received",
+                approval_validation_period = "7",
+                Approval_User_Id = -1,
+                is_claimed = 0,
+                price_list_id = -1,
+                internal_notes = string.Empty,
+                provider_location_id = -1,
+                provider_id = -1,
+                exceed_pool_id = -1,
+                money_for_exceed_note = -1,
+                is_pharma = 1,
+                is_chronic = 1,
+                claim_form_no = "0",
+                debit_spent = 0,
+                is_repeated = 0,
+                inpatient_duration_days = 0,
+                doctor_id = -1,
+                is_canceld = 0,
+                is_re_auth = 0,
+                pool_spent = 0,
+                pool_child_id = 0,
+                general_specality_id = -1,
+                Approval_Force_Debit = 0,
+                member_id = memberId,
+                client_id = member.client_id,
+                Client_Branch_id = member.branch_id,
+                policy_id = policy.Policy_Id,
+                program_id = policy.Program_id,
+                dental_comment = string.Empty,
+            };
+
+            approvalRepo.AddApproval(memberId, chronicApp);
+            #endregion
+
+            #region PharmaApprovalAct
+
+
+            var pharmaAct = new PharmaApprovalAct
+            {
+                Act_Approval_id = chronicApp.approval_id,
+                Act_Qty = approvalDto.qty,
+                dose = approvalDto.dose,
+                unit_name = approvalDto.unit_name,
+                Act_id = approvalDto.act_id,
+                Act_Discount = 0,
+                Act_Discount_Value = 0,
+                Act_Copayment_Percentage = 0,
+                Act_Copayment_Value = 0,
+                Act_Grand_Total = 0,
+                Act_Total_Amount = 0,
+                Act_Status = "Approved",
+                Act_Status_Reason = -1,
+
+
+            };
+
+            if (med.unit2_name == "TABLET")
+            {
+                pharmaAct.Act_Price = Convert.ToDecimal(med.sell_price) / Convert.ToDecimal(med.unit2_count);
+            }
+            else
+            {
+                pharmaAct.Act_Price = Convert.ToDecimal(med.sell_price);
+
+            }
+
+            pharmaRepo.InsertPharmaApproval(pharmaAct);
+            #endregion
+
+
+            #region ApprovalTimeLine
+
+            var appTimeline = new ApprovalTimeline
+            {
+                action = "requested by member",
+                portal_source = " mobile app",
+                provider_request_id = -1,
+                user_id = -1,
+                status = "Received"
+            };
+
+            appTimelineRepo.InsertApprovalTimeLine(appTimeline);
+
+            #endregion
 
             #region ApprovalRequestTable
 
@@ -344,104 +437,160 @@ namespace MediConsultMobileApi.Controllers
             }
 
             #endregion
-            #region ApprovalData
-
-            var member = authRepo.GetById(memberId);
-            var policy = programRepo.GetMemberbyMemberId(memberId);
-            var chronicApp = new Approval
-            {
-                approval_date = DateTime.Now.ToString("dd-MM-yyyy"),
-                approval_status = "Received",
-                approval_validation_period = "7",
-                Approval_User_Id = -1,
-                is_claimed = 0,
-                price_list_id = -1,
-                internal_notes = string.Empty,
-                provider_location_id = -1,
-                provider_id = -1,
-                exceed_pool_id = -1,
-                money_for_exceed_note = -1,
-                is_pharma = 1,
-                is_chronic = 1,
-                claim_form_no = "0",
-                debit_spent = 0,
-                is_repeated = 0,
-                inpatient_duration_days = 0,
-                doctor_id = -1,
-                is_canceld = 0,
-                is_re_auth = 0,
-                pool_spent = 0,
-                pool_child_id = 0,
-                general_specality_id = -1,
-                Approval_Force_Debit = 0,
-                member_id = memberId,
-                client_id = member.client_id,
-                Client_Branch_id = member.branch_id,
-                policy_id = policy.Policy_Id,
-                program_id = policy.Program_id,
-                dental_comment = string.Empty,
-            };
-
-            approvalRepo.AddApproval(memberId, chronicApp);
-            #endregion
-
-            #region PharmaApprovalAct
-
-          
-            var pharmaAct = new PharmaApprovalAct
-            {
-                Act_Approval_id = chronicApp.approval_id,
-                Act_Qty = approvalDto.qty,
-                dose = approvalDto.dose,
-                unit_name = approvalDto.unit_name,
-                Act_id = approvalDto.act_id,
-                Act_Discount = 0,
-                Act_Discount_Value = 0,
-                Act_Copayment_Percentage = 0,
-                Act_Copayment_Value = 0,
-                Act_Grand_Total = 0,
-                Act_Total_Amount = 0,
-                Act_Status = "Approved",
-                Act_Status_Reason = -1,
-
-
-            };
-
-            if (med.unit2_name == "TABLET")
-            {
-                pharmaAct.Act_Price = Convert.ToDecimal(med.sell_price) / Convert.ToDecimal(med.unit2_count);
-            }
-            else
-            {
-                pharmaAct.Act_Price = Convert.ToDecimal(med.sell_price);    
-
-            }
-
-            pharmaRepo.InsertPharmaApproval(pharmaAct);
-            #endregion
-          
-
-            #region ApprovalTimeLine
-
-            var appTimeline = new ApprovalTimeline
-            {
-                action = "requested by member",
-                portal_source = " mobile app",
-                provider_request_id = -1,
-                user_id = -1,
-                status = "Received"
-            };
-
-            appTimelineRepo.InsertApprovalTimeLine(appTimeline);
-
-            #endregion
-
 
             approvalRepo.Save();
 
-            return Ok(new MessageDto { Message =" Added "});
+            return Ok(new MessageDto { Message = " Added " });
         }
         #endregion
+
+
+        #region EditApprovalChronic
+        [HttpPost("EditApprovalChronic")]
+        public async Task<IActionResult> EditApprovalChronic(int requestId, string? lang, [FromForm] UpdateChronicApprovalDto requestDto)
+        {
+
+            var request = approvalRepo.GetById(requestId);
+
+            const long maxSizeBytes = 5 * 1024 * 1024;
+            var reqExists = requestRepo.RequestExists(requestId);
+            if (!reqExists)
+            {
+                return NotFound(new MessageDto { Message = Messages.RequestNotFound(lang) });
+            }
+          
+            if (request is null)
+            {
+                return NotFound(new MessageDto { Message = Messages.RequestNotFound(lang) });
+            }
+
+
+
+
+            var memberExists = memberRepo.MemberExists(requestDto.Member_id);
+
+            if (requestDto.Member_id is null)
+            {
+                return BadRequest(new MessageDto { Message = Messages.EnterMember(lang) });
+            }
+
+            if (!memberExists)
+            {
+                return BadRequest(new MessageDto { Message = Messages.MemberNotFound(lang) });
+
+            }
+
+
+            if (requestDto.Notes is null)
+            {
+                return BadRequest(new MessageDto { Message = Messages.EnterNotes(lang) });
+            }
+            var serverPath = AppDomain.CurrentDomain.BaseDirectory;
+
+            var folder = $"{serverPath}\\MemberPortalApp\\{requestDto.Member_id}\\ChronicApprovals\\{request.ID}";
+
+
+            DirectoryInfo dir = new DirectoryInfo(folder);
+
+            if (requestDto.DeletePhotos is not null)
+            {
+                foreach (var file in requestDto.DeletePhotos)
+                {
+                    foreach (var existingfile in dir.GetFiles())
+                    {
+                        string convertedPath = file.Replace("\\\\", "\\");
+                        if (convertedPath == existingfile.ToString())
+                        {
+                            existingfile.Delete();
+                        }
+
+                    }
+                }
+            }
+
+            if (requestDto.Photos is not null)
+            {
+                for (int i = 0; i < requestDto.Photos.Count; i++)
+                {
+
+                    if (requestDto.Photos[i].Length == 0)
+                    {
+                        return BadRequest(new MessageDto { Message = Messages.NoFileUploaded(lang) });
+                    }
+                    if (requestDto.Photos[i].Length >= maxSizeBytes)
+                    {
+                        return BadRequest(new MessageDto { Message = Messages.SizeOfFile(lang) });
+                    }
+                    switch (Path.GetExtension(requestDto.Photos[i].FileName))
+                    {
+                        case ".pdf":
+                        case ".png":
+                        case ".jpg":
+                        case ".jpeg":
+                            break;
+                        default:
+                            return BadRequest(new MessageDto { Message = Messages.FileExtension(lang) });
+                    }
+                }
+
+
+
+                for (int i = 0; i < requestDto.Photos.Count; i++)
+                {
+                    if (!Directory.Exists(folder))
+                    {
+                        Directory.CreateDirectory(folder);
+                    }
+
+                    string uniqueFileName = Guid.NewGuid().ToString() + "_" + requestDto.Photos[i].FileName;
+
+                    string filePath = Path.Combine(folder, uniqueFileName);
+
+
+                    if (Path.GetExtension(uniqueFileName) != ".pdf")
+                    {
+
+                        using (var stream = new MemoryStream())
+                        {
+                            // Read the uploaded image into a MemoryStream
+                            requestDto.Photos[i].CopyTo(stream);
+                            stream.Seek(0, SeekOrigin.Begin);
+
+                            // Load the image using ImageSharp
+                            using (var image = SixLabors.ImageSharp.Image.Load(stream))
+                            {
+                                // Compress the image
+                                image.Mutate(x => x.Resize(image.Width / 2, image.Height / 2));
+
+                                using (var outputStream = new FileStream(filePath, FileMode.Create))
+                                {
+                                    image.Save(outputStream, new JpegEncoder());
+                                }
+                            }
+                        }
+
+                    }
+                    else
+                    {
+                        using (FileStream stream = new FileStream(filePath, FileMode.Create))
+                        {
+                            await requestDto.Photos[i].CopyToAsync(stream);
+                        }
+                    }
+
+
+
+                }
+
+            }
+            approvalRepo.EditRequest(requestDto, requestId);
+
+            return Ok(new MessageDto { Message = Messages.Updated(lang) });
+
+
+        }
+        #endregion
+
 
         #region Cancel 
 

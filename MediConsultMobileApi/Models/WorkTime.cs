@@ -10,6 +10,6 @@ namespace MediConsultMobileApi.Models
 
         public string time_from { get; set; }
         public string time_to { get; set; }
-        public string time_slot { get; set; }
+        public int time_slot { get; set; }
     }
 }

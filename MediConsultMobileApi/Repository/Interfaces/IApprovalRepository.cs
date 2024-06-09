@@ -1,4 +1,5 @@
-﻿using MediConsultMobileApi.Models;
+﻿using MediConsultMobileApi.DTO;
+using MediConsultMobileApi.Models;
 
 namespace MediConsultMobileApi.Repository.Interfaces
 {
@@ -9,6 +10,9 @@ namespace MediConsultMobileApi.Repository.Interfaces
         void AddApproval(int memberId, Approval approval);
         void Canceled(int approvalId);
         bool ApprovalExists(int approvalId);
+
+        void EditRequest(UpdateChronicApprovalDto requestDto, int requestId);
+        Request GetById(int RequestId);
         void Save();
     }
 }

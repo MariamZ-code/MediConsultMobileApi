@@ -24,7 +24,7 @@ namespace MediConsultMobileApi.Controllers
         private readonly IMemberRepository memberRepo;
         private readonly IProviderRatingRepository ratingRepo;
 
-        public BookingController(IProviderLocationRepository locationReppo, IProviderSpecialtyRepository specialRepo, IBookingRepository bookingRepo, IProviderDataRepository providerRepo, IMemberRepository memberRepo , IProviderRatingRepository ratingRepo)
+        public BookingController(IProviderLocationRepository locationReppo, IProviderSpecialtyRepository specialRepo, IBookingRepository bookingRepo, IProviderDataRepository providerRepo, IMemberRepository memberRepo, IProviderRatingRepository ratingRepo)
         {
             this.locationReppo = locationReppo;
             this.specialRepo = specialRepo;
@@ -730,6 +730,9 @@ namespace MediConsultMobileApi.Controllers
 
         }
         #endregion
+
+
+
 
     }
 }

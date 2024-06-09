@@ -55,6 +55,7 @@ builder.Services.AddScoped<IGovernmentRepository, GovernmentRepository>();
 builder.Services.AddScoped<ICityRepository, CityRepository>();
 builder.Services.AddScoped<ILabAndScanCenterRepository, LabAndScanCenterRepository>();
 builder.Services.AddScoped<IServiceDataRepository, ServiceDataRepository>();
+builder.Services.AddScoped<IWorktimeReporsitory, WorktimeReporsitory>();
 
 builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("cs2")));
 
