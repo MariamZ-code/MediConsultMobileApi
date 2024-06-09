@@ -45,7 +45,7 @@ namespace MediConsultMobileApi.Controllers
             {
                 var worktimeDTO = new GetWorktimeDTO
                 {
-                    Rrovider_id = providerId,
+                    Provider_id = providerId,
                     Day = workTime.workTime.day,
                     Worktime_id = workTime.workTime.id,
                     Slot = workTime.workTime.time_slot,

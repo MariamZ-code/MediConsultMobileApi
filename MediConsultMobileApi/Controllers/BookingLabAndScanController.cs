@@ -154,7 +154,7 @@ namespace MediConsultMobileApi.Controllers
                 TotalServicename = totalServicename,
                 PageNum = startPage,
                 PageSize = pageSize,
-                Data = serviceNames
+                Data = uniqueServices
             };
             return Ok(result);
 
