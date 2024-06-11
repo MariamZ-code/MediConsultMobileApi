@@ -459,10 +459,10 @@ namespace MediConsultMobileApi.Controllers
             //    return NotFound(new MessageDto { Message = Messages.RequestNotFound(lang) });
             //}
           
-            if (request is null)
-            {
-                return NotFound(new MessageDto { Message = Messages.RequestNotFound(lang) });
-            }
+            //if (request is null)
+            //{
+            //    return NotFound(new MessageDto { Message = Messages.RequestNotFound(lang) });
+            //}
 
 
 
@@ -485,6 +485,7 @@ namespace MediConsultMobileApi.Controllers
             {
                 return BadRequest(new MessageDto { Message = Messages.EnterNotes(lang) });
             }
+            approvalRepo.EditRequest(requestDto, requestId);
             var serverPath = AppDomain.CurrentDomain.BaseDirectory;
 
             var folder = $"{serverPath}\\MemberPortalApp\\{requestDto.Member_id}\\ChronicApprovals\\{request.ID}";
@@ -582,7 +583,6 @@ namespace MediConsultMobileApi.Controllers
                 }
 
             }
-            approvalRepo.EditRequest(requestDto, requestId);
 
             return Ok(new MessageDto { Message = Messages.Updated(lang) });
 

@@ -42,7 +42,7 @@ namespace MediConsultMobileApi.Models
         [ForeignKey("Approval")]
         public int? Approval_id { get; set; } = null;
 
-        public virtual Approval Approval { get; set; }
+        public virtual Approval? Approval { get; set; }
 
         public int? provider_portal_request_id { get; set; } = 0;
 

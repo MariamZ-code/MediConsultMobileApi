@@ -60,27 +60,49 @@ namespace MediConsultMobileApi.Repository
         }
 
         #endregion
-        public Request GetById(int RequestId)
+        public Request GetById(int requestId)
         {
-            return dbContext.Requests.Include(p => p.Provider).Include(a => a.Approval).FirstOrDefault(r => r.ID == RequestId && r.is_chronic==1);
+            return dbContext.Requests.Include(p => p.Provider).Include(a => a.Approval).FirstOrDefault(r => r.Approval_id == requestId && r.is_chronic==1);
         }
 
         #region EditRequest
         public void EditRequest(UpdateChronicApprovalDto requestDto, int requestId)
         {
             var request = GetById(requestId);
-            request.Notes = requestDto.Notes;
-            request.Member_id = requestDto.Member_id;
-          
-         
             var serverPath = AppDomain.CurrentDomain.BaseDirectory;
 
-            var folder = Path.Combine(serverPath, "MemberPortalApp", request.Member_id.ToString(), "Approvals", request.ID.ToString());
+            if (request is null)
+            {
+             
 
+                var insertRequest = new Request
+                {
 
-            request.Folder_path = folder;
+                    Provider_id = 1,
+                    Notes = requestDto.Notes,
+                    Member_id = requestDto.Member_id,
+                    is_chronic = 1,
+                    Approval_id= requestId
 
-            dbContext.SaveChanges();
+                };
+             
+
+                dbContext.Add(insertRequest);
+
+                dbContext.SaveChanges();
+              
+            }
+
+            else
+            {
+                var folder2 = Path.Combine(serverPath, "MemberPortalApp", request.Member_id.ToString(), "Approvals", request.ID.ToString());
+
+                request.Notes = requestDto.Notes;
+                request.Member_id = requestDto.Member_id;
+                request.Folder_path = folder2;
+
+                dbContext.SaveChanges();
+            }
         }
 
         #endregion

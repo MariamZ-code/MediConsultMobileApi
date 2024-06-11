@@ -12,7 +12,7 @@ namespace MediConsultMobileApi.Repository.Interfaces
         bool ApprovalExists(int approvalId);
 
         void EditRequest(UpdateChronicApprovalDto requestDto, int requestId);
-        Request GetById(int RequestId);
+        Request GetById(int requestId);
         void Save();
     }
 }
