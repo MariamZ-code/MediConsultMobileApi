@@ -57,11 +57,11 @@ namespace MediConsultMobileApi.Controllers
                     }
                     if (filterMedi.specialtyName is not null)
                     {
-                        medicalNets = medicalNets.Where(x => x.Specialty_Name_En.Contains(filterMedi.specialtyName));
+                        medicalNets = medicalNets.Where(x => x.General_Specialty_Name_En.Contains(filterMedi.specialtyName));
                     }
                     if (filterMedi.subSpecialtyName is not null)
                     {
-                        medicalNets = medicalNets.Where(x => x.General_Specialty_Name_En.Contains(filterMedi.subSpecialtyName));
+                        medicalNets = medicalNets.Where(x => x.Specialty_Name_En.Contains(filterMedi.subSpecialtyName));
                     }
 
                     var totalCount = medicalNets.Count();
