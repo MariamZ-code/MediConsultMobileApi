@@ -27,5 +27,7 @@ namespace MediConsultMobileApi.Models
         public int provider_id { get; set; }
         public int city_id { get; set; }
         public int location_id { get; set; }
+        public string Specialty_Name_En { get; set; }
+        public string Specialty_Name_Ar { get; set; }
     }
 }

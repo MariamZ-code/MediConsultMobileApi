@@ -453,11 +453,11 @@ namespace MediConsultMobileApi.Controllers
             var request = approvalRepo.GetById(requestId);
 
             const long maxSizeBytes = 5 * 1024 * 1024;
-            var reqExists = requestRepo.RequestExists(requestId);
-            if (!reqExists)
-            {
-                return NotFound(new MessageDto { Message = Messages.RequestNotFound(lang) });
-            }
+            var reqExists = approvalRepo.GetByApprovalId(requestId);
+            //if (!reqExists)
+            //{
+            //    return NotFound(new MessageDto { Message = Messages.RequestNotFound(lang) });
+            //}
           
             if (request is null)
             {
@@ -577,7 +577,6 @@ namespace MediConsultMobileApi.Controllers
                             await requestDto.Photos[i].CopyToAsync(stream);
                         }
                     }
-
 
 
                 }

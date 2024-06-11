@@ -112,7 +112,7 @@ namespace MediConsultMobileApi.Controllers
                     var totalProvidersSpecialty = 0;
                     foreach (var specialist in convertSpecialists)
                     {
-                        //totalProvidersSpecialty = specialRepo.GetProvidersSpecialtiesByProviderId(specialist.Specialty_Id).Count();
+                      
                         if (location.provider_id == specialist.provider_id)
                         {
                             if (lang == "en")

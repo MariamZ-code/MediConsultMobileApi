@@ -77,8 +77,8 @@ namespace MediConsultMobileApi.Controllers
                             MedicalNetworkEnDTO medicalNetEnDto = new MedicalNetworkEnDTO
                             {
 
-                                Category = medicalNet.Category_Name_En,
                                 providerName = medicalNet.provider_name_en,
+                                Category = medicalNet.Category_Name_En,
                                 Latitude = medicalNet.Latitude,
                                 Longitude = medicalNet.Longitude,
                                 Email = medicalNet.Email,
@@ -89,6 +89,7 @@ namespace MediConsultMobileApi.Controllers
                                 City = medicalNet.city_name_en,
                                 SpecialtyName = medicalNet.General_Specialty_Name_En,
                                 ProviderAddress = address.location_address_en,
+                                SubSpecialtyName= medicalNet.Specialty_Name_En
                                 
                             };
                             if (providerOnline is null)
@@ -168,7 +169,8 @@ namespace MediConsultMobileApi.Controllers
                             Government = medicalNet.government_name_ar,
                             City = medicalNet.city_name_ar,
                             SpecialtyName = medicalNet.Speciality,
-                            ProviderAddress = address.location_address_ar
+                            ProviderAddress = address.location_address_ar,
+                                SubSpecialtyName = medicalNet.Specialty_Name_Ar
                         };
                         medicalNetAr.Add(medicalNetArDto);
                     }
