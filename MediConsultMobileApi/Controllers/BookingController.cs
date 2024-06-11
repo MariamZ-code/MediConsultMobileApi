@@ -35,156 +35,156 @@ namespace MediConsultMobileApi.Controllers
         }
 
         #region GetBooking
-        [HttpGet("filtration")]
-        public IActionResult GetBooking(string lang, [FromQuery] BookingFilter bookingFilter, int startPage = 1, int pageSize = 10)
-        {
+        //[HttpGet("filtration")]
+        //public IActionResult GetBooking(string lang, [FromQuery] BookingFilter bookingFilter, int startPage = 1, int pageSize = 10)
+        //{
 
-            if (ModelState.IsValid)
-            {
-                var bookingListDto = new List<BookingDto>();
+        //    if (ModelState.IsValid)
+        //    {
+        //        var bookingListDto = new List<BookingDto>();
 
-                var locations = locationReppo.GetProviderLocations();
-                var specialists = specialRepo.GetProviderSpecialties();
-                var totalProviderCount = specialRepo.GetCountOfProviders().Count();
+        //        var locations = locationReppo.GetProviderLocations();
+        //        var specialists = specialRepo.GetProviderSpecialties();
+        //        var totalProviderCount = specialRepo.GetCountOfProviders().Count();
 
-                if (lang == "en")
-                {
-                    if (bookingFilter.cityName is not null)
-                    {
-                        locations = locations.Where(p => p.AppSelectorGovernmentCity.city_name_en.Contains(bookingFilter.cityName));
-                    }
-                    if (bookingFilter.govName is not null)
-                    {
-                        locations = locations.Where(p => p.AppSelectorGovernmentCity.appSelectorGovernment.government_name_en.Contains(bookingFilter.govName));
-                    }
-                    if (bookingFilter.providerName is not null)
-                    {
-                        locations = locations.Where(p => p.Provider.provider_name_en.Contains(bookingFilter.providerName));
-                    }
-                    if (bookingFilter.categoryName is not null)
-                    {
-                        locations = locations.Where(p => p.Provider.Category.Category_Name_En.Contains(bookingFilter.categoryName));
-                    }
-                    if (bookingFilter.specialtyName is not null)
-                    {
-                        specialists = specialists.Where(p => p.GeneralSpecialty.General_Specialty_Name_En.Contains(bookingFilter.specialtyName));
-                    }
-                    if (bookingFilter.subSpecialtyName is not null)
-                    {
-                        specialists = specialists.Where(p => p.subGeneralSpecialty.Specialty_Name_En.Contains(bookingFilter.subSpecialtyName));
-                    }
-                }
-                else
-                {
-                    if (bookingFilter.cityName is not null)
-                    {
-                        locations = locations.Where(p => p.AppSelectorGovernmentCity.city_name_ar.Contains(bookingFilter.cityName));
-                    }
-                    if (bookingFilter.govName is not null)
-                    {
-                        locations = locations.Where(p => p.AppSelectorGovernmentCity.appSelectorGovernment.government_name_ar.Contains(bookingFilter.govName));
-                    }
-                    if (bookingFilter.providerName is not null)
-                    {
-                        locations = locations.Where(p => p.Provider.provider_name_ar.Contains(bookingFilter.providerName));
-                    }
-                    if (bookingFilter.categoryName is not null)
-                    {
-                        locations = locations.Where(p => p.Provider.Category.Category_Name_Ar.Contains(bookingFilter.categoryName));
-                    }
-                    if (bookingFilter.specialtyName is not null)
-                    {
-                        specialists = specialists.Where(p => p.GeneralSpecialty.General_Specialty_Name_Ar.Contains(bookingFilter.specialtyName));
-                    }
-                    if (bookingFilter.subSpecialtyName is not null)
-                    {
-                        specialists = specialists.Where(p => p.subGeneralSpecialty.Specialty_Name_Ar.Contains(bookingFilter.subSpecialtyName));
-                    }
-                }
+        //        if (lang == "en")
+        //        {
+        //            if (bookingFilter.cityName is not null)
+        //            {
+        //                locations = locations.Where(p => p.AppSelectorGovernmentCity.city_name_en.Contains(bookingFilter.cityName));
+        //            }
+        //            if (bookingFilter.govName is not null)
+        //            {
+        //                locations = locations.Where(p => p.AppSelectorGovernmentCity.appSelectorGovernment.government_name_en.Contains(bookingFilter.govName));
+        //            }
+        //            if (bookingFilter.providerName is not null)
+        //            {
+        //                locations = locations.Where(p => p.Provider.provider_name_en.Contains(bookingFilter.providerName));
+        //            }
+        //            if (bookingFilter.categoryName is not null)
+        //            {
+        //                locations = locations.Where(p => p.Provider.Category.Category_Name_En.Contains(bookingFilter.categoryName));
+        //            }
+        //            if (bookingFilter.specialtyName is not null)
+        //            {
+        //                specialists = specialists.Where(p => p.GeneralSpecialty.General_Specialty_Name_En.Contains(bookingFilter.specialtyName));
+        //            }
+        //            if (bookingFilter.subSpecialtyName is not null)
+        //            {
+        //                specialists = specialists.Where(p => p.subGeneralSpecialty.Specialty_Name_En.Contains(bookingFilter.subSpecialtyName));
+        //            }
+        //        }
+        //        else
+        //        {
+        //            if (bookingFilter.cityName is not null)
+        //            {
+        //                locations = locations.Where(p => p.AppSelectorGovernmentCity.city_name_ar.Contains(bookingFilter.cityName));
+        //            }
+        //            if (bookingFilter.govName is not null)
+        //            {
+        //                locations = locations.Where(p => p.AppSelectorGovernmentCity.appSelectorGovernment.government_name_ar.Contains(bookingFilter.govName));
+        //            }
+        //            if (bookingFilter.providerName is not null)
+        //            {
+        //                locations = locations.Where(p => p.Provider.provider_name_ar.Contains(bookingFilter.providerName));
+        //            }
+        //            if (bookingFilter.categoryName is not null)
+        //            {
+        //                locations = locations.Where(p => p.Provider.Category.Category_Name_Ar.Contains(bookingFilter.categoryName));
+        //            }
+        //            if (bookingFilter.specialtyName is not null)
+        //            {
+        //                specialists = specialists.Where(p => p.GeneralSpecialty.General_Specialty_Name_Ar.Contains(bookingFilter.specialtyName));
+        //            }
+        //            if (bookingFilter.subSpecialtyName is not null)
+        //            {
+        //                specialists = specialists.Where(p => p.subGeneralSpecialty.Specialty_Name_Ar.Contains(bookingFilter.subSpecialtyName));
+        //            }
+        //        }
 
 
-                var convertSpecialists = specialists.ToList();
-                var convertLocations = locations.ToList();
-                foreach (var location in convertLocations)
-                {
+        //        var convertSpecialists = specialists.ToList();
+        //        var convertLocations = locations.ToList();
+        //        foreach (var location in convertLocations)
+        //        {
 
-                    var bookingDto = new BookingDto();
-                    var totalProvidersSpecialty = 0;
-                    foreach (var specialist in convertSpecialists)
-                    {
+        //            var bookingDto = new BookingDto();
+        //            var totalProvidersSpecialty = 0;
+        //            foreach (var specialist in convertSpecialists)
+        //            {
                       
-                        if (location.provider_id == specialist.provider_id)
-                        {
-                            if (lang == "en")
-                            {
+        //                if (location.provider_id == specialist.provider_id)
+        //                {
+        //                    if (lang == "en")
+        //                    {
 
-                                bookingDto.Specialist_Name = specialist.GeneralSpecialty.General_Specialty_Name_En;
-                                bookingDto.Sub_Specialist_Name = specialist.subGeneralSpecialty.Specialty_Name_En;
-                            }
-                            else
-                            {
-                                bookingDto.Specialist_Name = specialist.GeneralSpecialty.General_Specialty_Name_Ar;
-                                bookingDto.Sub_Specialist_Name = specialist.subGeneralSpecialty.Specialty_Name_Ar;
+        //                        bookingDto.Specialist_Name = specialist.GeneralSpecialty.General_Specialty_Name_En;
+        //                        bookingDto.Sub_Specialist_Name = specialist.subGeneralSpecialty.Specialty_Name_En;
+        //                    }
+        //                    else
+        //                    {
+        //                        bookingDto.Specialist_Name = specialist.GeneralSpecialty.General_Specialty_Name_Ar;
+        //                        bookingDto.Sub_Specialist_Name = specialist.subGeneralSpecialty.Specialty_Name_Ar;
 
-                            }
-                        }
-                    }
+        //                    }
+        //                }
+        //            }
 
-                    bookingDto.Location_id = location.location_id;
-                    bookingDto.Provider_id = location.provider_id;
-                    bookingDto.Telephone_1 = location.location_telephone_1;
-                    bookingDto.Telephone_2 = location.location_telephone_2;
-                    bookingDto.Mobile_1 = location.location_mobile_1;
-                    bookingDto.Mobile_2 = location.location_mobile_2;
-                    bookingDto.HotLine = location.hotline;
-                    bookingDto.Status = location.Provider.provider_status;
-                    //bookingDto.TotalProviders = totalProvidersSpecialty;
+        //            bookingDto.Location_id = location.location_id;
+        //            bookingDto.Provider_id = location.provider_id;
+        //            bookingDto.Telephone_1 = location.location_telephone_1;
+        //            bookingDto.Telephone_2 = location.location_telephone_2;
+        //            bookingDto.Mobile_1 = location.location_mobile_1;
+        //            bookingDto.Mobile_2 = location.location_mobile_2;
+        //            bookingDto.HotLine = location.hotline;
+        //            bookingDto.Status = location.Provider.provider_status;
+        //            //bookingDto.TotalProviders = totalProvidersSpecialty;
 
-                    if (lang == "en")
-                    {
-                        bookingDto.Area = location.location_area_en;
-                        bookingDto.Address = location.location_address_en;
-                        bookingDto.City_Name = location.AppSelectorGovernmentCity.city_name_en;
-                        bookingDto.Government_Name = location.AppSelectorGovernmentCity.appSelectorGovernment.government_name_en;
-                        bookingDto.Provider_Name = location.Provider.provider_name_en;
-                        bookingDto.Category_Name = location.Provider.Category.Category_Name_En;
-
-
-                    }
-                    else
-                    {
-
-                        bookingDto.Area = location.location_area_ar;
-                        bookingDto.Address = location.location_address_ar;
-                        bookingDto.City_Name = location.AppSelectorGovernmentCity.city_name_ar;
-                        bookingDto.Government_Name = location.AppSelectorGovernmentCity.appSelectorGovernment.government_name_ar;
-                        bookingDto.Provider_Name = location.Provider.provider_name_ar;
-                        bookingDto.Category_Name = location.Provider.Category.Category_Name_Ar;
+        //            if (lang == "en")
+        //            {
+        //                bookingDto.Area = location.location_area_en;
+        //                bookingDto.Address = location.location_address_en;
+        //                bookingDto.City_Name = location.AppSelectorGovernmentCity.city_name_en;
+        //                bookingDto.Government_Name = location.AppSelectorGovernmentCity.appSelectorGovernment.government_name_en;
+        //                bookingDto.Provider_Name = location.Provider.provider_name_en;
+        //                bookingDto.Category_Name = location.Provider.Category.Category_Name_En;
 
 
-                    }
+        //            }
+        //            else
+        //            {
+
+        //                bookingDto.Area = location.location_area_ar;
+        //                bookingDto.Address = location.location_address_ar;
+        //                bookingDto.City_Name = location.AppSelectorGovernmentCity.city_name_ar;
+        //                bookingDto.Government_Name = location.AppSelectorGovernmentCity.appSelectorGovernment.government_name_ar;
+        //                bookingDto.Provider_Name = location.Provider.provider_name_ar;
+        //                bookingDto.Category_Name = location.Provider.Category.Category_Name_Ar;
 
 
-                    bookingListDto.Add(bookingDto);
-                    //}
-                }
-                var totalBooking = bookingListDto.Count();
+        //            }
 
-                bookingListDto = bookingListDto
-                         .Skip((startPage - 1) * pageSize)
-                         .Take(pageSize).ToList();
-                var result = new
-                {
-                    TotalBooking = totalBooking,
-                    PageNum = startPage,
-                    PageSize = pageSize,
-                    ProviderLocations = bookingListDto
-                };
-                return Ok(result);
-            }
-            return BadRequest(ModelState);
 
-        }
+        //            bookingListDto.Add(bookingDto);
+        //            //}
+        //        }
+        //        var totalBooking = bookingListDto.Count();
+
+        //        bookingListDto = bookingListDto
+        //                 .Skip((startPage - 1) * pageSize)
+        //                 .Take(pageSize).ToList();
+        //        var result = new
+        //        {
+        //            TotalBooking = totalBooking,
+        //            PageNum = startPage,
+        //            PageSize = pageSize,
+        //            ProviderLocations = bookingListDto
+        //        };
+        //        return Ok(result);
+        //    }
+        //    return BadRequest(ModelState);
+
+        //}
 
         #endregion
 

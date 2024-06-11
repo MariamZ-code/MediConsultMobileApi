@@ -24,7 +24,7 @@ namespace MediConsultMobileApi.Controllers
         }
         [HttpGet]
 
-        public IActionResult MedicalNetwork([FromQuery]FilterMedicalNetworkDTO filterMedi, string lang,  int StartPage = 1, int pageSize = 10)
+        public IActionResult MedicalNetwork([FromQuery] FilterMedicalNetworkDTO filterMedi, string lang,  int StartPage = 1, int pageSize = 10)
         {
 
             if (ModelState.IsValid)
@@ -39,13 +39,13 @@ namespace MediConsultMobileApi.Controllers
                     {
                         medicalNets = medicalNets.Where(x => x.provider_name_en.Contains(filterMedi.providerName));
                     }
-                    if (filterMedi.gov is not null)
+                    if (filterMedi.govName is not null)
                     {
-                        medicalNets = medicalNets.Where(x => x.government_name_en.Contains(filterMedi.gov));
+                        medicalNets = medicalNets.Where(x => x.government_name_en.Contains(filterMedi.govName));
                     }
-                    if (filterMedi.city is not null)
+                    if (filterMedi.cityName is not null)
                     {
-                        medicalNets = medicalNets.Where(x => x.city_name_en.Contains(filterMedi.city));
+                        medicalNets = medicalNets.Where(x => x.city_name_en.Contains(filterMedi.cityName));
                     }
                     if (filterMedi.categories != null && filterMedi.categories.Any())
                     {
@@ -54,6 +54,14 @@ namespace MediConsultMobileApi.Controllers
                             var status = filterMedi.categories[i];
                         }
                         medicalNets = medicalNets.Where(c => filterMedi.categories.Contains(c.Category_Name_En));
+                    }
+                    if (filterMedi.specialtyName is not null)
+                    {
+                        medicalNets = medicalNets.Where(x => x.Specialty_Name_En.Contains(filterMedi.specialtyName));
+                    }
+                    if (filterMedi.subSpecialtyName is not null)
+                    {
+                        medicalNets = medicalNets.Where(x => x.General_Specialty_Name_En.Contains(filterMedi.subSpecialtyName));
                     }
 
                     var totalCount = medicalNets.Count();
@@ -126,22 +134,31 @@ namespace MediConsultMobileApi.Controllers
                 {
                     medicalNets = medicalNets.Where(x => x.provider_name.Contains(filterMedi.providerName));
                 }
-                if (filterMedi.gov is not null)
+                if (filterMedi.govName is not null)
                 {
-                    medicalNets = medicalNets.Where(x => x.government_name_ar.Contains(filterMedi.gov));
+                    medicalNets = medicalNets.Where(x => x.government_name_ar.Contains(filterMedi.govName));
                 }
-                if (filterMedi.city is not null)
+                if (filterMedi.cityName is not null)
                 {
-                    medicalNets = medicalNets.Where(x => x.city_name_ar.Contains(filterMedi.city));
+                    medicalNets = medicalNets.Where(x => x.city_name_ar.Contains(filterMedi.cityName));
                 }
                 if (filterMedi.categories != null && filterMedi.categories.Any())
                 {
                     for (int i = 0; i < filterMedi.categories.Length; i++)
                     {
-                        var cat = filterMedi.categories[i];
+                        var status = filterMedi.categories[i];
                     }
-                    medicalNets = medicalNets.Where(c => filterMedi.categories.Contains(c.Category));
+                    medicalNets = medicalNets.Where(c => filterMedi.categories.Contains(c.Category_Name_En));
                 }
+                if (filterMedi.specialtyName is not null)
+                {
+                    medicalNets = medicalNets.Where(x => x.Speciality.Contains(filterMedi.specialtyName));
+                }
+                if (filterMedi.subSpecialtyName is not null)
+                {
+                    medicalNets = medicalNets.Where(x => x.Specialty_Name_Ar.Contains(filterMedi.subSpecialtyName));
+                }
+
 
 
                 var totalCountt = medicalNets.Count();
