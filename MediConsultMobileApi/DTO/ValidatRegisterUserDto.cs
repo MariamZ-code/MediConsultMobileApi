@@ -9,6 +9,5 @@
 
         public string ConfirmPassword { get; set; }
 
-        //public string Otp { get; set; }
     }
 }
