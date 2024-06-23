@@ -7,7 +7,7 @@ using MediConsultMobileApi.Hubs;
 using MediConsultMobileApi.Models;
 using MediConsultMobileApi.Repository;
 using MediConsultMobileApi.Repository.Interfaces;
-
+using MediConsultMobileApi.ServiceRegistrations;
 using MediConsultMobileApi.Validations;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.EntityFrameworkCore;
@@ -15,47 +15,13 @@ using Microsoft.Extensions.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddResponseCaching();
-//var txt = "_myAllowSpecificOrigins";
+
+// Register services 
+builder.Services.RegisterApplicationSservices();
 
 builder.Services.AddSignalR();
 builder.Services.AddControllersWithViews();
 
-builder.Services.AddScoped<IAuthRepository, AuthRepository>(); 
-builder.Services.AddScoped<ChatHub, ChatHub>();
-builder.Services.AddScoped<IMemberRepository, MemberRepository>();
-builder.Services.AddScoped<IServiceRepository, SeviceRepository>();
-builder.Services.AddScoped<IProviderDataRepository , ProviderDataRepository>();
-builder.Services.AddScoped<IRequestRepository, RequestRepository>();
-builder.Services.AddScoped<IMedicalNetworkRepository , MedicalNetworkRepository>();
-builder.Services.AddScoped<ITokenRepository , TokenRepository>();
-builder.Services.AddScoped<ICategoryRepository , CategoryRepository>();
-builder.Services.AddScoped<IRefundRepository, RefundRepository>();
-builder.Services.AddScoped<IPolicyRepository, PolicyRepository>();
-builder.Services.AddScoped<IRefundTypeRepository, RefundTypeRepository>();
-builder.Services.AddScoped<ISettingsRepository, SettingsRepository>();
-builder.Services.AddScoped<IPolicyInfoRepository, PolicyInfoRepository>();
-builder.Services.AddScoped<IMemberECardInfoRepository, MemberECardInfoRepository>();
-builder.Services.AddScoped<INotificationRepository, NotificationRepository>();
-builder.Services.AddScoped<IValidation, Validation>();
-builder.Services.AddScoped<IParentServiceRepository, ParentServiceRepository>();
-builder.Services.AddScoped<IServiceCopaymentRepository, ServiceCopaymentRepository>();
-builder.Services.AddScoped<IApprovalRepository, ApprovalRepository>();
-builder.Services.AddScoped<IPharmaApprovalRepository,PharmaApprovalRepository>();
-builder.Services.AddScoped<IApprovalLogRepository, ApprovalLogRepository>();
-builder.Services.AddScoped<HangFireController, HangFireController>();
-builder.Services.AddScoped<IProviderLocationRepository, ProviderLocationRepository>();
-builder.Services.AddScoped<IProviderSpecialtyRepository, ProviderSpecialtyRepository>();
-builder.Services.AddScoped<IBookingRepository, BookingRepository>();
-builder.Services.AddScoped<IMemberHistoryRepsitory, MemberHistoryRepsitory>();
-builder.Services.AddScoped<IYodawyMedicinsRepository, YodawyMedicinsRepository>();
-builder.Services.AddScoped<IMemberProgramRepository, MemberProgramRepository>();
-builder.Services.AddScoped<IApprovalTimelineRepository, ApprovalTimelineRepository>();
-builder.Services.AddScoped<IProviderRatingRepository, ProviderRatingRepository>();
-builder.Services.AddScoped<IGovernmentRepository, GovernmentRepository>();
-builder.Services.AddScoped<ICityRepository, CityRepository>();
-builder.Services.AddScoped<ILabAndScanCenterRepository, LabAndScanCenterRepository>();
-builder.Services.AddScoped<IServiceDataRepository, ServiceDataRepository>();
-builder.Services.AddScoped<IWorktimeReporsitory, WorktimeReporsitory>();
 
 builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("cs2")));
 
