@@ -250,7 +250,6 @@ namespace MediConsultMobileApi.Controllers
                     {
                         return BadRequest(new MessageDto { Message = Messages.NationalIdInvalid(lang) });
 
-
                     }
                 }
                 if (userDto.Password.Length < 8)
