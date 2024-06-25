@@ -23,14 +23,14 @@ namespace MediConsultMobileApi.Controllers
         private readonly IRequestRepository requestRepo;
         private readonly IProviderDataRepository providerRepo;
         private readonly IMemberRepository memberRepo;
+        private readonly IIsMemberAllowedOnThisProviderRepository isAllowRepo;
 
-
-        public RequestController(IRequestRepository requestRepo, IProviderDataRepository providerRepo, IMemberRepository memberRepo)
+        public RequestController(IRequestRepository requestRepo, IProviderDataRepository providerRepo, IMemberRepository memberRepo , IIsMemberAllowedOnThisProviderRepository isAllowRepo)
         {
             this.requestRepo = requestRepo;
             this.providerRepo = providerRepo;
             this.memberRepo = memberRepo;
-
+            this.isAllowRepo = isAllowRepo;
         }
 
         #region AddNewRequest
@@ -76,11 +76,17 @@ namespace MediConsultMobileApi.Controllers
                     return BadRequest(new MessageDto { Message = Messages.ProviderDeactivated(lang) });
 
                 }
+
+                var restult = await isAllowRepo.IsMemberAllowedOnThisProvider(requestDto.Member_id, requestDto.Provider_id);
+
+                if (restult == 0)
+                    return NotFound(new MessageDto { Message= Messages.IsMemberAllow(lang)});
+
                 //if (requestDto.Is_chronic is null)
                 //{
                 //    return BadRequest(new MessageDto { Message = Messages.EnterIsChronic(lang) });
                 //}
-             
+
                 var serverPath = AppDomain.CurrentDomain.BaseDirectory;
 
 
@@ -112,6 +118,8 @@ namespace MediConsultMobileApi.Controllers
                             return BadRequest(new MessageDto { Message = Messages.FileExtension(lang) });
                     }
                 }
+
+
                 var request = requestRepo.AddRequest(requestDto);
                 var folder = $"{serverPath}\\MemberPortalApp\\{requestDto.Member_id}\\Approvals\\{request.ID}";
 

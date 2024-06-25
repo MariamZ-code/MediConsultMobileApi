@@ -48,6 +48,7 @@ namespace MediConsultMobileApi.ServiceRegistrations
             services.AddScoped<ILabAndScanCenterRepository, LabAndScanCenterRepository>();
             services.AddScoped<IServiceDataRepository, ServiceDataRepository>();
             services.AddScoped<IWorktimeReporsitory, WorktimeReporsitory>();
+            services.AddScoped<IIsMemberAllowedOnThisProviderRepository, IsMemberAllowedOnThisProviderRepository > ();
         }
     }
 }

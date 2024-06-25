@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using iText.Commons.Actions.Contexts;
+using Microsoft.EntityFrameworkCore;
+using System.Data.SqlClient;
 
 namespace MediConsultMobileApi.Models
 {
@@ -8,7 +10,20 @@ namespace MediConsultMobileApi.Models
         {
            
         }
+        public async Task<int> IsMemberAllowedOnThisProvider(int? memberId, int? providerId)
+        {
+            var memberIdParam = new SqlParameter("@member_id", memberId);
+            var providerIdParam = new SqlParameter("@provider_id", providerId);
 
+            var result = await this.Database.ExecuteSqlRawAsync(
+                "EXEC [dbo].[IsMemberAllowedOnThisProvider] @member_id, @provider_id",
+                memberIdParam,
+                providerIdParam
+            );
+
+            // Assuming the stored procedure returns 1 or 0 indicating if the member is allowed
+            return result;
+        }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Service>()
@@ -82,6 +97,7 @@ namespace MediConsultMobileApi.Models
         public DbSet<BookingLabAndScan> BookingLabAndScans { get; set; }
         public DbSet<BookingService> BookingServices { get; set; }
         public DbSet<ServiceData> ServiceDatas { get; set; }
+        public DbSet<IsMemberAllowedOnThisProvider> IsMemberAllowedOnThisProviders { get; set; }
 
 
 

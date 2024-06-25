@@ -355,5 +355,10 @@
         {
             return language == "ar" ? "تم إضافة تقييمك" : "Your rating has been added ";
         }
+
+        public static string IsMemberAllow(string language)
+        {
+            return language == "ar" ? "عذرًا، بناءً على برنامج التأمين الخاص بك، لا يمكنك الحصول على الخدمات من مقدم الخدمة المحدد" : "Sorry, based on your insurance program you cannot get services from selected provider";
+        }
     }
 }
